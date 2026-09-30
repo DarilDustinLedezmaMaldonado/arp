@@ -1,0 +1,21 @@
+{
+  "_comment": "Orden fijo usado como indice de las matrices 15x15. region determina el NODO DUENO (shard) de un vuelo segun su AEROPUERTO DESTINO. NODE_NA=SQL Server (America), NODE_EA=SQL Server (Europa/Asia/Medio Oriente/Oceania), NODE_SA=MongoDB (Sudamerica).",
+  "order": ["ATL", "PEK", "DXB", "TYO", "LON", "LAX", "PAR", "FRA", "IST", "SIN", "MAD", "AMS", "DFW", "CAN", "SAO"],
+  "airports": {
+    "ATL": { "name": "Hartsfield-Jackson Atlanta", "city": "Atlanta", "country": "USA", "countryCode": "US", "region": "NODE_NA", "lat": 33.6407, "lon": -84.4277 },
+    "PEK": { "name": "Beijing Capital", "city": "Beijing", "country": "China", "countryCode": "CN", "region": "NODE_EA", "lat": 40.0799, "lon": 116.6031 },
+    "DXB": { "name": "Dubai International", "city": "Dubai", "country": "Emiratos Arabes Unidos", "countryCode": "AE", "region": "NODE_EA", "lat": 25.2532, "lon": 55.3657 },
+    "TYO": { "name": "Tokyo (Haneda/Narita)", "city": "Tokio", "country": "Japon", "countryCode": "JP", "region": "NODE_EA", "lat": 35.5494, "lon": 139.7798 },
+    "LON": { "name": "London Heathrow", "city": "Londres", "country": "Reino Unido", "countryCode": "GB", "region": "NODE_EA", "lat": 51.4700, "lon": -0.4543 },
+    "LAX": { "name": "Los Angeles Intl", "city": "Los Angeles", "country": "USA", "countryCode": "US", "region": "NODE_NA", "lat": 33.9416, "lon": -118.4085 },
+    "PAR": { "name": "Paris Charles de Gaulle", "city": "Paris", "country": "Francia", "countryCode": "FR", "region": "NODE_EA", "lat": 49.0097, "lon": 2.5479 },
+    "FRA": { "name": "Frankfurt am Main", "city": "Frankfurt", "country": "Alemania", "countryCode": "DE", "region": "NODE_EA", "lat": 50.0379, "lon": 8.5622 },
+    "IST": { "name": "Istanbul Airport", "city": "Estambul", "country": "Turquia", "countryCode": "TR", "region": "NODE_EA", "lat": 41.2753, "lon": 28.7519 },
+    "SIN": { "name": "Singapore Changi", "city": "Singapur", "country": "Singapur", "countryCode": "SG", "region": "NODE_EA", "lat": 1.3644, "lon": 103.9915 },
+    "MAD": { "name": "Adolfo Suarez Madrid-Barajas", "city": "Madrid", "country": "Espana", "countryCode": "ES", "region": "NODE_EA", "lat": 40.4983, "lon": -3.5676 },
+    "AMS": { "name": "Amsterdam Schiphol", "city": "Amsterdam", "country": "Paises Bajos", "countryCode": "NL", "region": "NODE_EA", "lat": 52.3105, "lon": 4.7683 },
+    "DFW": { "name": "Dallas/Fort Worth", "city": "Dallas", "country": "USA", "countryCode": "US", "region": "NODE_NA", "lat": 32.8998, "lon": -97.0403 },
+    "CAN": { "name": "Guangzhou Baiyun", "city": "Guangzhou", "country": "China", "countryCode": "CN", "region": "NODE_EA", "lat": 23.3924, "lon": 113.2988 },
+    "SAO": { "name": "Sao Paulo-Guarulhos", "city": "Sao Paulo", "country": "Brasil", "countryCode": "BR", "region": "NODE_SA", "lat": -23.4356, "lon": -46.4731 }
+  }
+}

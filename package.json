@@ -1,0 +1,44 @@
+{
+  "name": "aerolineas-rafael-pabon",
+  "version": "1.0.0",
+  "description": "Sistema de reservas aereas distribuido - Practica 3 Sincronizacion de Procesos (Sistemas Distribuidos - UNIVALLE)",
+  "main": "server/index.js",
+  "type": "commonjs",
+  "scripts": {
+    "seed": "node scripts/seed.js",
+    "seed:local": "node scripts/seed.js --driver=sqlite",
+    "node:na": "cross-env NODE_ID=NODE_NA PORT=4001 node server/index.js",
+    "node:ea": "cross-env NODE_ID=NODE_EA PORT=4002 node server/index.js",
+    "node:sa": "cross-env NODE_ID=NODE_SA PORT=4003 node server/index.js",
+    "local:na": "cross-env ALLOW_INSECURE_LOCAL=true BIND_HOST=127.0.0.1 DB_DRIVER=sqlite NODE_ID=NODE_NA PORT=4001 node server/index.js",
+    "local:ea": "cross-env ALLOW_INSECURE_LOCAL=true BIND_HOST=127.0.0.1 DB_DRIVER=sqlite NODE_ID=NODE_EA PORT=4002 node server/index.js",
+    "local:sa": "cross-env ALLOW_INSECURE_LOCAL=true BIND_HOST=127.0.0.1 DB_DRIVER=sqlite NODE_ID=NODE_SA PORT=4003 node server/index.js",
+    "local:all": "concurrently -n NA,EA,SA -c green,cyan,magenta \"npm:local:na\" \"npm:local:ea\" \"npm:local:sa\"",
+    "start": "node server/index.js",
+    "vendor:assets": "node scripts/vendor_assets.js",
+    "wallet:assets": "node scripts/make_wallet_assets.js",
+    "test": "node --test test/*.test.js"
+  },
+  "dependencies": {
+    "better-sqlite3": "^11.3.0",
+    "body-parser": "^1.20.2",
+    "cors": "^2.8.5",
+    "dotenv": "^16.4.5",
+    "express": "^4.19.2",
+    "mongodb": "^6.9.0",
+    "mssql": "^11.0.1",
+    "passkit-generator": "^3.6.1",
+    "pdfkit": "^0.15.0",
+    "qrcode": "^1.5.4",
+    "uuid": "^9.0.1"
+  },
+  "devDependencies": {
+    "concurrently": "^8.2.2",
+    "cross-env": "^7.0.3",
+    "chart.js": "^4.5.1",
+    "html5-qrcode": "^2.3.8",
+    "@fontsource/inter": "^5.3.0",
+    "@fontsource/jetbrains-mono": "^5.3.0",
+    "@fontsource/space-grotesk": "^5.3.0"
+  }
+}

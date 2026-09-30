@@ -1,0 +1,345 @@
+{
+  "generatedAt": "2026-09-29T23:58:45.948Z",
+  "simToday": "2026-09-26",
+  "totalFlights": 60000,
+  "forcedScheduledCount": 32589,
+  "priceEstimatedCount": 32880,
+  "estimatedPairs": [
+    "ATL->SIN",
+    "PEK->LON",
+    "DXB->TYO",
+    "LON->AMS",
+    "ATL->AMS",
+    "TYO->IST",
+    "LON->ATL",
+    "PEK->IST",
+    "PEK->DXB",
+    "ATL->FRA",
+    "ATL->LAX",
+    "TYO->PEK",
+    "DXB->AMS",
+    "DXB->LAX",
+    "PEK->SAO",
+    "DXB->CAN",
+    "LON->FRA",
+    "TYO->PAR",
+    "TYO->MAD",
+    "LON->CAN",
+    "TYO->DFW",
+    "LON->LAX",
+    "LON->DXB",
+    "PEK->MAD",
+    "DXB->FRA",
+    "DXB->SIN",
+    "ATL->TYO",
+    "TYO->LON"
+  ],
+  "aircraftContinuityAnomalies": 56515,
+  "aircraftContinuitySample": [
+    {
+      "aircraftId": 7,
+      "prevFlight": {
+        "id": "F-034906",
+        "date": "2026-09-25",
+        "time": "02:22",
+        "dest": "CAN"
+      },
+      "nextFlight": {
+        "id": "F-003134",
+        "date": "2026-09-25",
+        "time": "02:25",
+        "origin": "DXB"
+      }
+    },
+    {
+      "aircraftId": 7,
+      "prevFlight": {
+        "id": "F-003134",
+        "date": "2026-09-25",
+        "time": "02:25",
+        "dest": "AMS"
+      },
+      "nextFlight": {
+        "id": "F-014186",
+        "date": "2026-09-25",
+        "time": "02:52",
+        "origin": "TYO"
+      }
+    },
+    {
+      "aircraftId": 7,
+      "prevFlight": {
+        "id": "F-014186",
+        "date": "2026-09-25",
+        "time": "02:52",
+        "dest": "ATL"
+      },
+      "nextFlight": {
+        "id": "F-040797",
+        "date": "2026-09-25",
+        "time": "03:03",
+        "origin": "PEK"
+      }
+    },
+    {
+      "aircraftId": 7,
+      "prevFlight": {
+        "id": "F-040797",
+        "date": "2026-09-25",
+        "time": "03:03",
+        "dest": "SIN"
+      },
+      "nextFlight": {
+        "id": "F-024598",
+        "date": "2026-09-25",
+        "time": "03:08",
+        "origin": "ATL"
+      }
+    },
+    {
+      "aircraftId": 7,
+      "prevFlight": {
+        "id": "F-024598",
+        "date": "2026-09-25",
+        "time": "03:08",
+        "dest": "FRA"
+      },
+      "nextFlight": {
+        "id": "F-030234",
+        "date": "2026-09-25",
+        "time": "03:20",
+        "origin": "LON"
+      }
+    },
+    {
+      "aircraftId": 7,
+      "prevFlight": {
+        "id": "F-030234",
+        "date": "2026-09-25",
+        "time": "03:20",
+        "dest": "LAX"
+      },
+      "nextFlight": {
+        "id": "F-056480",
+        "date": "2026-09-25",
+        "time": "03:35",
+        "origin": "DXB"
+      }
+    },
+    {
+      "aircraftId": 7,
+      "prevFlight": {
+        "id": "F-056480",
+        "date": "2026-09-25",
+        "time": "03:35",
+        "dest": "LAX"
+      },
+      "nextFlight": {
+        "id": "F-042935",
+        "date": "2026-09-25",
+        "time": "03:40",
+        "origin": "ATL"
+      }
+    },
+    {
+      "aircraftId": 7,
+      "prevFlight": {
+        "id": "F-042935",
+        "date": "2026-09-25",
+        "time": "03:40",
+        "dest": "FRA"
+      },
+      "nextFlight": {
+        "id": "F-022446",
+        "date": "2026-09-25",
+        "time": "03:41",
+        "origin": "DXB"
+      }
+    },
+    {
+      "aircraftId": 7,
+      "prevFlight": {
+        "id": "F-022446",
+        "date": "2026-09-25",
+        "time": "03:41",
+        "dest": "PEK"
+      },
+      "nextFlight": {
+        "id": "F-021775",
+        "date": "2026-09-25",
+        "time": "03:44",
+        "origin": "DXB"
+      }
+    },
+    {
+      "aircraftId": 7,
+      "prevFlight": {
+        "id": "F-021775",
+        "date": "2026-09-25",
+        "time": "03:44",
+        "dest": "DFW"
+      },
+      "nextFlight": {
+        "id": "F-010501",
+        "date": "2026-09-25",
+        "time": "03:45",
+        "origin": "TYO"
+      }
+    },
+    {
+      "aircraftId": 7,
+      "prevFlight": {
+        "id": "F-010501",
+        "date": "2026-09-25",
+        "time": "03:45",
+        "dest": "CAN"
+      },
+      "nextFlight": {
+        "id": "F-033987",
+        "date": "2026-09-25",
+        "time": "04:06",
+        "origin": "LON"
+      }
+    },
+    {
+      "aircraftId": 7,
+      "prevFlight": {
+        "id": "F-033987",
+        "date": "2026-09-25",
+        "time": "04:06",
+        "dest": "TYO"
+      },
+      "nextFlight": {
+        "id": "F-036732",
+        "date": "2026-09-25",
+        "time": "04:25",
+        "origin": "ATL"
+      }
+    },
+    {
+      "aircraftId": 7,
+      "prevFlight": {
+        "id": "F-036732",
+        "date": "2026-09-25",
+        "time": "04:25",
+        "dest": "AMS"
+      },
+      "nextFlight": {
+        "id": "F-043980",
+        "date": "2026-09-25",
+        "time": "04:27",
+        "origin": "PEK"
+      }
+    },
+    {
+      "aircraftId": 7,
+      "prevFlight": {
+        "id": "F-043980",
+        "date": "2026-09-25",
+        "time": "04:27",
+        "dest": "SIN"
+      },
+      "nextFlight": {
+        "id": "F-041808",
+        "date": "2026-09-25",
+        "time": "04:33",
+        "origin": "LON"
+      }
+    },
+    {
+      "aircraftId": 7,
+      "prevFlight": {
+        "id": "F-041808",
+        "date": "2026-09-25",
+        "time": "04:33",
+        "dest": "CAN"
+      },
+      "nextFlight": {
+        "id": "F-055253",
+        "date": "2026-09-25",
+        "time": "04:40",
+        "origin": "ATL"
+      }
+    },
+    {
+      "aircraftId": 7,
+      "prevFlight": {
+        "id": "F-055253",
+        "date": "2026-09-25",
+        "time": "04:40",
+        "dest": "SIN"
+      },
+      "nextFlight": {
+        "id": "F-029700",
+        "date": "2026-09-25",
+        "time": "04:41",
+        "origin": "LON"
+      }
+    },
+    {
+      "aircraftId": 7,
+      "prevFlight": {
+        "id": "F-029700",
+        "date": "2026-09-25",
+        "time": "04:41",
+        "dest": "PAR"
+      },
+      "nextFlight": {
+        "id": "F-020495",
+        "date": "2026-09-25",
+        "time": "04:47",
+        "origin": "TYO"
+      }
+    },
+    {
+      "aircraftId": 7,
+      "prevFlight": {
+        "id": "F-020495",
+        "date": "2026-09-25",
+        "time": "04:47",
+        "dest": "DFW"
+      },
+      "nextFlight": {
+        "id": "F-036966",
+        "date": "2026-09-25",
+        "time": "05:00",
+        "origin": "TYO"
+      }
+    },
+    {
+      "aircraftId": 7,
+      "prevFlight": {
+        "id": "F-036966",
+        "date": "2026-09-25",
+        "time": "05:00",
+        "dest": "CAN"
+      },
+      "nextFlight": {
+        "id": "F-035232",
+        "date": "2026-09-25",
+        "time": "05:20",
+        "origin": "PEK"
+      }
+    },
+    {
+      "aircraftId": 7,
+      "prevFlight": {
+        "id": "F-035232",
+        "date": "2026-09-25",
+        "time": "05:20",
+        "dest": "LAX"
+      },
+      "nextFlight": {
+        "id": "F-051498",
+        "date": "2026-09-25",
+        "time": "05:45",
+        "origin": "TYO"
+      }
+    }
+  ],
+  "ownerNodeDistribution": {
+    "NODE_NA": 11794,
+    "NODE_EA": 43473,
+    "NODE_SA": 4733
+  }
+}

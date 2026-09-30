@@ -1,0 +1,63 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Aerolíneas Rafael Pabón</title>
+  <meta name="theme-color" content="#0a1930">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='20' fill='%230a1930'/><path d='M50 14l8 30 30 12v8l-30-6-2 20 10 8v6l-16-5-16 5v-6l10-8-2-20-30 6v-8l30-12z' fill='%23f2a104'/></svg>">
+  <link rel="stylesheet" href="/css/main.css">
+  <style>
+    .seat-pending { outline: 2px dashed var(--navy-950); outline-offset: 1px; }
+    @media (max-width: 900px) { #booking-grid, #gd-lower { grid-template-columns: 1fr !important; } aside { position: static !important; } }
+    @media (max-width: 720px) {
+      .board__head, .board__row { grid-template-columns: 72px minmax(120px,1fr) 68px 82px !important; }
+      .board__head span:nth-child(3), .board__head span:nth-child(5), .board__head span:nth-child(6),
+      .board__row .col-3, .board__row .col-5, .board__row .col-6 { display: none !important; }
+      .board__head span:nth-child(4), .board__head span:nth-child(7), .board__row .col-4, .board__row .col-7 { display: block !important; }
+    }
+  </style>
+</head>
+<body>
+  <header class="app-header">
+    <div class="app-header__inner">
+      <a class="brand" href="#/" style="text-decoration:none;color:#fff"><span class="brand__mark">✈</span><span id="brand-text">Rafael Pabón</span></a>
+      <button class="nav-toggle" id="nav-toggle" type="button" aria-controls="main-nav" aria-expanded="false" aria-label="Abrir menú">
+        <span></span><span></span><span></span>
+      </button>
+      <nav class="main-nav" id="main-nav"></nav>
+      <div class="header-controls">
+        <span class="node-indicator" title="Nodos"><span id="node-dots" style="display:inline-flex;gap:4px"></span></span>
+        <select class="pill-select" id="node-select" aria-label="Nodo"></select>
+        <span class="node-badge" id="node-badge" aria-live="polite"></span>
+        <select class="pill-select" id="lang-select" aria-label="Idioma"></select>
+      </div>
+    </div>
+  </header>
+
+  <main id="view-root"></main>
+  <footer class="app-footer">Aerolíneas Rafael Pabón · Sistemas Distribuidos — Práctica 3 · <span id="footer-node"></span></footer>
+
+  <script src="/vendor/chart.umd.js"></script>
+  <script src="/vendor/html5-qrcode.min.js"></script>
+
+  <script src="/js/i18n.js"></script>
+  <script src="/js/api.js"></script>
+  <script src="/js/util.js"></script>
+  <script src="/js/components/routeMap.js"></script>
+  <script src="/js/components/seatMap.js"></script>
+  <script src="/js/components/charts.js"></script>
+  <script src="/js/views/searchView.js"></script>
+  <script src="/js/views/bookingView.js"></script>
+  <script src="/js/views/connectionView.js"></script>
+  <script src="/js/views/itineraryView.js"></script>
+  <script src="/js/views/receiptView.js"></script>
+  <script src="/js/views/walletView.js"></script>
+  <script src="/js/views/flightDashboardView.js"></script>
+  <script src="/js/views/globalDashboardView.js"></script>
+  <script src="/js/views/plannerView.js"></script>
+  <script src="/js/views/checkinView.js"></script>
+  <script src="/js/views/adminView.js"></script>
+  <script src="/js/app.js"></script>
+</body>
+</html>

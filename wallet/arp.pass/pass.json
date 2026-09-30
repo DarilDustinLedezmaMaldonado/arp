@@ -1,0 +1,14 @@
+{
+  "formatVersion": 1,
+  "passTypeIdentifier": "pass.com.rafaelpabon.boarding",
+  "teamIdentifier": "XXXXXXXXXX",
+  "organizationName": "Aerolineas Rafael Pabon",
+  "description": "Tarjeta de embarque - Aerolineas Rafael Pabon",
+  "logoText": "Rafael Pabon",
+  "foregroundColor": "rgb(255,255,255)",
+  "backgroundColor": "rgb(11,61,145)",
+  "labelColor": "rgb(255,203,102)",
+  "boardingPass": {
+    "transitType": "PKTransitTypeAir"
+  }
+}

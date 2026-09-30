@@ -1,0 +1,15 @@
+{
+  "_comment": "aircraft_id (1-50) del dataset se asigna a un modelo segun rangos derivados del tamano de flota (6+18+11+15=50), en el orden en que aparecen en el PDF. aisleAfter indica despues de que columna va un pasillo (para dibujar el mapa de asientos).",
+  "models": {
+    "A380": { "name": "Airbus A380-800", "firstClassSeats": 10, "economySeats": 439, "fleetSize": 6, "idRange": [1, 6] },
+    "B777": { "name": "Boeing 777-300ER", "firstClassSeats": 10, "economySeats": 300, "fleetSize": 18, "idRange": [7, 24] },
+    "A350": { "name": "Airbus A350-900", "firstClassSeats": 12, "economySeats": 250, "fleetSize": 11, "idRange": [25, 35] },
+    "B789": { "name": "Boeing 787-9 Dreamliner", "firstClassSeats": 8, "economySeats": 220, "fleetSize": 15, "idRange": [36, 50] }
+  },
+  "seatLayout": {
+    "A380": { "firstCols": ["A", "B", "E", "F"], "firstAisleAfter": ["B"], "economyCols": ["A", "B", "C", "D", "E", "F", "G", "H", "J", "K"], "economyAisleAfter": ["C", "G"] },
+    "B777": { "firstCols": ["A", "C", "D", "G"], "firstAisleAfter": ["A", "D"], "economyCols": ["A", "B", "C", "D", "E", "F", "G", "H", "J"], "economyAisleAfter": ["C", "F"] },
+    "A350": { "firstCols": ["A", "D", "G", "K"], "firstAisleAfter": ["A", "G"], "economyCols": ["A", "B", "C", "D", "E", "F", "G", "H", "J", "K"], "economyAisleAfter": ["C", "G"] },
+    "B789": { "firstCols": ["A", "C", "H", "K"], "firstAisleAfter": ["C"], "economyCols": ["A", "B", "C", "D", "E", "F", "G", "H", "J"], "economyAisleAfter": ["C", "F"] }
+  }
+}

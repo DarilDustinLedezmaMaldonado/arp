@@ -1,0 +1,29 @@
+{
+  "_readme": "Para la demo en 1 PC, los 3 nodos corren como procesos separados en localhost con puertos distintos (ver npm run dev:local3). Para la demo en 3 PC por LAN, cambia 'host' de cada nodo por la IP LAN real de la maquina que lo va a correr (ej. 192.168.1.10) y deja el mismo PORT. Cada PC solo necesita levantar SU PROPIO nodo (npm run node:na / node:ea / node:sa); los otros dos se contactan por red.",
+  "nodes": {
+    "NODE_NA": {
+      "label": "Nodo America (SQL Server)",
+      "dbDriver": "mssql",
+      "host": "localhost",
+      "port": 4001,
+      "ownsRegion": "NODE_NA",
+      "flagEmoji": "\ud83c\uddfa\ud83c\uddf8"
+    },
+    "NODE_EA": {
+      "label": "Nodo Europa/Asia (SQL Server)",
+      "dbDriver": "mssql",
+      "host": "localhost",
+      "port": 4002,
+      "ownsRegion": "NODE_EA",
+      "flagEmoji": "\ud83c\uddea\ud83c\uddfa"
+    },
+    "NODE_SA": {
+      "label": "Nodo Sudamerica (MongoDB)",
+      "dbDriver": "mongo",
+      "host": "localhost",
+      "port": 4003,
+      "ownsRegion": "NODE_SA",
+      "flagEmoji": "\ud83c\udde7\ud83c\uddf7"
+    }
+  }
+}
