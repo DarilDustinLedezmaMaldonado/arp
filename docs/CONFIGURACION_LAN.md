@@ -59,7 +59,9 @@ ADMIN_SECRET=REEMPLAZAR_POR_OTRA_CLAVE_ALEATORIA
 Generar dos claves distintas de al menos 32 caracteres (en Linux:
 `openssl rand -hex 32`, una vez por clave). Copiar la misma `SYNC_SECRET` a las
 tres PC. No usar literalmente los ejemplos ni compartir claves en capturas.
-Administración pedirá `ADMIN_SECRET`. Usar solo una LAN de confianza:
+Administración pedirá `ADMIN_SECRET`; usar la misma `ADMIN_SECRET` en las tres
+PC para que el apartado **Pasajes recientes** pueda consultar los tres nodos.
+Usar solo una LAN de confianza:
 este despliegue HTTP no cifra el tráfico.
 
 PC 1 (`NODE_NA`):
@@ -187,6 +189,10 @@ incluso si la base primaria usa SQL Server o MongoDB.
 Esta es replicación de eventos de aplicación, no replicación nativa entre
 motores. Las pruebas automatizadas usan SQLite; realizar estas pruebas LAN
 sobre los tres motores antes de dar por lista la entrega.
+
+Para seguir las compras en vivo, abrir **Administración → Pasajes recientes** en
+cualquier PC: muestra los últimos pasajes de los tres nodos y, en la columna
+**Réplicas**, si cada nodo ya los recibió (`✓`), aún no (`⏳`) o no responde (`✗`).
 
 ## 8. Prueba de Dijkstra
 
