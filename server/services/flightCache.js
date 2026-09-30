@@ -22,6 +22,11 @@ class FlightCache {
   }
 
   async load() {
+    if (typeof this.primaryAdapter.listAllFlights === 'function') {
+      this.byId.clear();
+      for (const f of await this.primaryAdapter.listAllFlights()) this.byId.set(f.id, f);
+      return this.byId.size;
+    }
     const BATCH = 5000;
     let offset = 0;
     this.byId.clear();

@@ -34,6 +34,9 @@ class MssqlAdapter {
         trustServerCertificate: String(env('TRUST_CERT', 'true')) === 'true',
       },
       pool: { max: 10, min: 0, idleTimeoutMillis: 30000 },
+      // 15 s (el valor por defecto) es poco para SQL Server Express en una laptop.
+      connectionTimeout: Number(env('CONNECTION_TIMEOUT', 30000)),
+      requestTimeout: Number(env('REQUEST_TIMEOUT', 120000)),
     };
     this.pool = await new sql.ConnectionPool(config).connect();
     await this._migrate();
@@ -88,6 +91,10 @@ class MssqlAdapter {
       CREATE INDEX idx_flights_od ON dbo.flights(origin, destination);
     `);
     await this.pool.request().batch(`
+      IF NOT EXISTS (SELECT 1 FROM sys.indexes WHERE name = 'idx_flights_date_time')
+      CREATE INDEX idx_flights_date_time ON dbo.flights(flight_date, flight_time);
+    `);
+    await this.pool.request().batch(`
       IF NOT EXISTS (SELECT 1 FROM sys.indexes WHERE name = 'idx_tx_flight')
       CREATE INDEX idx_tx_flight ON dbo.seat_transactions(flight_id);
     `);
@@ -127,6 +134,12 @@ class MssqlAdapter {
       const request = new sql.Request(this.pool);
       await request.bulk(batchTable);
     }
+  }
+
+  /** Todos los vuelos en una sola lectura (arranque del nodo: llena la cache en memoria). */
+  async listAllFlights() {
+    const r = await this.pool.request().query('SELECT * FROM dbo.flights');
+    return r.recordset.map(flightRowToObj);
   }
 
   async getFlight(id) {

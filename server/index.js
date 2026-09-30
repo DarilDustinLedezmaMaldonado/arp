@@ -60,6 +60,7 @@ async function main() {
   console.log(`[${NODE_ID}] Base de datos primaria conectada: ${primaryAdapter.kind}`);
 
   const flightCache = new FlightCache(primaryAdapter);
+  console.log(`[${NODE_ID}] Cargando vuelos desde la base primaria...`);
   const loaded = await flightCache.load();
   console.log(`[${NODE_ID}] Vuelos cargados en cache: ${loaded}`);
 
