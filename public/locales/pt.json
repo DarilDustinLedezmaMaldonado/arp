@@ -365,7 +365,8 @@
       "purchaseRequests": "Pedidos de compra",
       "ticketsSold": "Passagens vendidas daqui",
       "dbRecords": "Registros no seu BD",
-      "activeNow": "Ativos agora"
+      "activeNow": "Ativos agora",
+      "outdated": "O nó responde, mas tem uma versão anterior do código sem este relatório: atualize o projeto nesse PC e reinicie o nó."
     },
     "boarding": {
       "title": "Lista de embarque de um voo",

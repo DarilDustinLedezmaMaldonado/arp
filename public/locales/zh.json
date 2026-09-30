@@ -365,7 +365,8 @@
       "purchaseRequests": "购票请求",
       "ticketsSold": "从此处售出的机票",
       "dbRecords": "其数据库中的记录",
-      "activeNow": "当前活跃"
+      "activeNow": "当前活跃",
+      "outdated": "该节点可以访问，但运行的是没有此报告的旧版本代码：请在那台电脑上更新项目并重启节点。"
     },
     "boarding": {
       "title": "航班登机名单",

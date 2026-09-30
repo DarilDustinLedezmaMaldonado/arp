@@ -365,7 +365,8 @@
       "purchaseRequests": "Purchase requests",
       "ticketsSold": "Tickets sold from here",
       "dbRecords": "Records in its DB",
-      "activeNow": "Active now"
+      "activeNow": "Active now",
+      "outdated": "The node answers but runs an older version without this report: update the project on that PC and restart the node."
     },
     "boarding": {
       "title": "Flight boarding list",

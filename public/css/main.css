@@ -553,12 +553,16 @@ textarea.matrix-paste { font-family: var(--font-mono); font-size: 12px; min-heig
 
 footer.app-footer { text-align: center; color: var(--slate-400); font-size: 12px; padding: 30px; }
 
-@media (max-width: 1180px) and (min-width: 721px) {
+/* Con 10 secciones el menu no cabe junto a la marca y los selectores: en computadora va en una segunda fila. */
+@media (min-width: 721px) {
   .app-header__inner { display: grid; grid-template-columns: 1fr auto; gap: 10px 20px; padding: 12px 20px 9px; }
   .brand { align-self: center; }
   .header-controls { grid-column: 2; grid-row: 1; justify-self: end; min-width: 0; }
   .main-nav { grid-column: 1 / -1; grid-row: 2; justify-content: center; flex-wrap: wrap; padding-bottom: 3px; }
-  .main-nav a { flex: 0 0 auto; padding: 7px 7px; font-size: 12px; }
+  .main-nav a { flex: 0 0 auto; }
+}
+@media (max-width: 1180px) and (min-width: 721px) {
+  .main-nav a { padding: 7px 7px; font-size: 12px; }
 }
 
 @media (max-width: 720px) {

@@ -63,8 +63,10 @@ window.Views.reports = {
       const rows = nodes.map((n, i) => {
         const r = results[i];
         if (r.status !== 'fulfilled') {
+          // 404 = el nodo responde pero corre una version anterior sin este reporte.
+          const outdated = r.reason && r.reason.status === 404;
           return `<tr><td><strong>${Util.esc(n.flag)} ${Util.esc(n.label)}</strong><div class="itin-muted mono">${Util.esc(n.url)}</div></td>
-            <td colspan="7" style="color:var(--rose-600)">${Util.esc(t('dashboardGlobal.unreachable'))}</td></tr>`;
+            <td colspan="7" style="color:${outdated ? '#8a5a00' : 'var(--rose-600)'}">${Util.esc(t(outdated ? 'reports.conn.outdated' : 'dashboardGlobal.unreachable'))}</td></tr>`;
         }
         const s = r.value;
         Object.keys(totals).forEach((k) => { totals[k] += Number(s[k]) || 0; });

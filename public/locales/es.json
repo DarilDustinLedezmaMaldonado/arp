@@ -365,7 +365,8 @@
       "purchaseRequests": "Solicitudes de compra",
       "ticketsSold": "Pasajes vendidos desde aquí",
       "dbRecords": "Registros en su BD",
-      "activeNow": "Activos ahora"
+      "activeNow": "Activos ahora",
+      "outdated": "El nodo responde, pero tiene una versión anterior del código sin este reporte: actualiza el proyecto en esa PC y reinicia el nodo."
     },
     "boarding": {
       "title": "Lista de embarque de un vuelo",

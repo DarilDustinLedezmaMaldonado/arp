@@ -365,7 +365,8 @@
       "purchaseRequests": "Demandes d'achat",
       "ticketsSold": "Billets vendus d'ici",
       "dbRecords": "Enregistrements dans sa BD",
-      "activeNow": "Actifs maintenant"
+      "activeNow": "Actifs maintenant",
+      "outdated": "Le nœud répond, mais utilise une version antérieure sans ce rapport : mettez à jour le projet sur ce PC et redémarrez le nœud."
     },
     "boarding": {
       "title": "Liste d'embarquement d'un vol",
