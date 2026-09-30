@@ -16,6 +16,7 @@ const { ConfigService } = require('./services/configService');
 const { FlightCache } = require('./services/flightCache');
 const { BookingService } = require('./services/bookingService');
 const { SagaService, startSagaWorker } = require('./services/sagaService');
+const { ConnectionTracker } = require('./services/connectionTracker');
 const { partitionGuard } = require('./middleware/partitionGuard');
 const { startOutboxWorker } = require('./sync/outboxWorker');
 const { startRefundWorker } = require('./sync/refundWorker');
@@ -23,6 +24,7 @@ const { startRefundWorker } = require('./sync/refundWorker');
 const { buildFlightsRouter } = require('./routes/flights');
 const { buildBookingRouter } = require('./routes/booking');
 const { buildItineraryRouter } = require('./routes/itinerary');
+const { buildReportsRouter } = require('./routes/reports');
 const { buildRoutePlannerRouter } = require('./routes/routePlanner');
 const { buildAdminRouter } = require('./routes/admin');
 const { buildWalletRouter } = require('./routes/wallet');
@@ -75,6 +77,7 @@ async function main() {
   ctx.configService = new ConfigService(systemStore);
   ctx.bookingService = new BookingService(ctx);
   ctx.sagaService = new SagaService(ctx);
+  ctx.connectionTracker = new ConnectionTracker(systemStore);
   await recoverDecisions(ctx);
   for (const tx of await primaryAdapter.getAllOwnedTransactions()) systemStore.upsertReplicaTx(tx);
 
@@ -114,9 +117,12 @@ async function main() {
 
   app.use('/internal/sync', guard('sync'), partitionGuard(ctx), buildSyncRouter(ctx));
 
+  // Cada peticion de un cliente a la API cuenta para el reporte de conexiones (la sincronizacion entre nodos no).
+  app.use('/api', ctx.connectionTracker.middleware());
   app.use('/api', buildFlightsRouter(ctx));
   app.use('/api', buildBookingRouter(ctx));
   app.use('/api', buildItineraryRouter(ctx));
+  app.use('/api', buildReportsRouter(ctx));
   app.use('/api', buildRoutePlannerRouter(ctx));
   app.use('/api/admin', (req, res, next) => {
     // Public dashboards remain readable; administrative data and writes require a key.
@@ -134,6 +140,7 @@ async function main() {
   startOutboxWorker(ctx);
   startRefundWorker(ctx);
   startSagaWorker(ctx);
+  ctx.connectionTracker.start();
 
   app.listen(PORT, process.env.BIND_HOST || '0.0.0.0', () => {
     console.log(`[${NODE_ID}] Escuchando en http://${process.env.BIND_HOST || '0.0.0.0'}:${PORT}  (dueno de region: ${nodesConfig[NODE_ID].ownsRegion})`);

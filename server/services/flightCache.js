@@ -54,6 +54,16 @@ class FlightCache {
       (!statuses || statuses.includes(f.status)));
   }
 
+  /** Rutas directas que existen en el dataset (pares origen-destino) con su cantidad de vuelos. */
+  routes() {
+    const counts = new Map();
+    for (const f of this.byId.values()) {
+      const key = `${f.origin}-${f.destination}`;
+      counts.set(key, (counts.get(key) || 0) + 1);
+    }
+    return Array.from(counts, ([key, flights]) => { const [from, to] = key.split('-'); return { from, to, flights }; });
+  }
+
   /** Cuantos vuelos hay en cada estado con los demas filtros aplicados. */
   statusCounts(filters = {}) {
     const counts = {};

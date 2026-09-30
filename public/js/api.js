@@ -3,10 +3,21 @@
 /* global window */
 
 const LS_KEY = 'arp_selected_node_id';
+const LS_CLIENT = 'arp_client_id';
+
+// Identificador anonimo de este navegador: los nodos lo usan para contar conexiones de clientes.
+function clientId() {
+  try {
+    let id = localStorage.getItem(LS_CLIENT);
+    if (!id) { id = (window.crypto && window.crypto.randomUUID) ? window.crypto.randomUUID() : `c-${Date.now().toString(36)}-${Math.random().toString(36).slice(2, 10)}`; localStorage.setItem(LS_CLIENT, id); }
+    return id;
+  } catch { return undefined; }
+}
 
 const ApiClient = {
   adminSecret: '',
   adminHeaders(path) { return path.startsWith('/api/admin/') && this.adminSecret ? { 'X-Admin-Secret': this.adminSecret } : {}; },
+  clientHeaders() { const id = clientId(); return id ? { 'X-Client-Id': id } : {}; },
   selfId: null,
   nodeList: [],
   selectedId: null,
@@ -56,14 +67,14 @@ const ApiClient = {
   },
 
   async get(path, params, baseOverride) {
-    const res = await fetch(this._url(baseOverride || this.baseUrl(), path, params), { headers: this.adminHeaders(path) });
+    const res = await fetch(this._url(baseOverride || this.baseUrl(), path, params), { headers: { ...this.clientHeaders(), ...this.adminHeaders(path) } });
     return this._handle(res);
   },
 
   async post(path, body, baseOverride) {
     const res = await fetch((baseOverride || this.baseUrl()) + path, {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json', ...this.adminHeaders(path) },
+      headers: { 'Content-Type': 'application/json', ...this.clientHeaders(), ...this.adminHeaders(path) },
       body: JSON.stringify(body || {}),
     });
     return this._handle(res);

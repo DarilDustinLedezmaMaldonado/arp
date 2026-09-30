@@ -27,6 +27,50 @@ window.Views.flightDashboard = {
     if (!flightId) return;
     const body = root.querySelector('#fd-body');
     let first = true;
+    // Filtros de la lista de pasajeros (se conservan entre refrescos).
+    let sourceFilter = 'ALL';
+    let statusFilter = 'BOUGHT';
+    let query = '';
+    let seats = [];
+    const STATUS_GROUPS = { BOUGHT: ['SOLD', 'CHECKED_IN'], RESERVED: ['RESERVED'], ALL: ['SOLD', 'CHECKED_IN', 'RESERVED'] };
+    const seatOrder = (a, b) => {
+      const [, ra, ca] = a.seatNumber.match(/^(\d+)(\D+)$/) || [];
+      const [, rb, cb] = b.seatNumber.match(/^(\d+)(\D+)$/) || [];
+      return (Number(ra) - Number(rb)) || String(ca).localeCompare(String(cb));
+    };
+    const nodeTag = (id) => { const n = ApiClient.nodeById(id); return n ? `${n.flag} ${id.replace(/^NODE_/, '')}` : (id || '—'); };
+    const statusText = (s) => t({ SOLD: 'seatLegend.sold', CHECKED_IN: 'seatLegend.checkedIn', RESERVED: 'seatLegend.reserved' }[s] || s);
+
+    // Lista de pasajeros: compras reales (overlay de transacciones) y ocupacion simulada (base del 73 %).
+    const drawPassengers = () => {
+      const occupied = seats.filter((s) => STATUS_GROUPS.ALL.includes(s.status) && s.passengerName);
+      const byStatus = occupied.filter((s) => STATUS_GROUPS[statusFilter].includes(s.status));
+      const counts = { ALL: byStatus.length, LIVE: byStatus.filter((s) => s.source === 'LIVE').length, BASE: byStatus.filter((s) => s.source !== 'LIVE').length };
+      const q = query.trim().toLowerCase();
+      const rows = byStatus
+        .filter((s) => sourceFilter === 'ALL' || (sourceFilter === 'LIVE' ? s.source === 'LIVE' : s.source !== 'LIVE'))
+        .filter((s) => !q || s.passengerName.toLowerCase().includes(q) || s.seatNumber.toLowerCase().includes(q))
+        .sort(seatOrder);
+      body.querySelector('#fd-src-chips').innerHTML = [['ALL', 'dashboardFlight.pax.all'], ['LIVE', 'dashboardFlight.pax.real'], ['BASE', 'dashboardFlight.pax.simulated']]
+        .map(([key, label]) => `<button type="button" role="radio" class="status-chip" aria-checked="${key === sourceFilter}" data-src="${key}">
+          ${Util.esc(t(label))} <span class="mono">${Util.number(counts[key])}</span></button>`).join('');
+      body.querySelectorAll('[data-src]').forEach((b) => { b.onclick = () => { sourceFilter = b.dataset.src; drawPassengers(); }; });
+      body.querySelector('#fd-pax-count').textContent = t('dashboardFlight.pax.showing', { count: Util.number(rows.length) });
+      body.querySelector('#fd-pax-body').innerHTML = rows.length ? rows.map((s, i) => {
+        const real = s.source === 'LIVE';
+        return `<tr class="${real ? 'pax-real' : ''}">
+          <td class="num itin-muted">${i + 1}</td>
+          <td class="mono" style="font-weight:700">${Util.esc(s.seatNumber)}</td>
+          <td><strong>${Util.esc(s.passengerName)}</strong></td>
+          <td>${Util.esc(t(s.cabinClass === 'FIRST' ? 'dashboardFlight.firstClass' : 'dashboardFlight.economyClass'))}</td>
+          <td><span class="tag ${s.status === 'RESERVED' ? 'tag-pending' : 'tag-synced'}">${Util.esc(statusText(s.status))}</span></td>
+          <td>${real ? `<span class="pax-badge real">${Util.esc(t('dashboardFlight.pax.realBadge'))}</span>` : `<span class="pax-badge sim">${Util.esc(t('dashboardFlight.pax.simBadge'))}</span>`}</td>
+          <td class="mono" style="font-size:12px">${real ? Util.esc(nodeTag(s.originNode)) : '—'}</td>
+          <td>${real ? (s.syncStatus === 'LOCAL_PENDING' ? '<span class="tag tag-pending">⏳</span>' : '<span class="tag tag-synced">✓</span>') : '—'}</td>
+          <td class="mono">${real ? s.lamportTs : '—'}</td>
+        </tr>`;
+      }).join('') : '<tr><td colspan="9" style="text-align:center;color:var(--slate-500);padding:20px">—</td></tr>';
+    };
 
     const draw = async () => {
       let data;
@@ -38,7 +82,6 @@ window.Views.flightDashboard = {
       }
       const { flight, stats } = data;
       const seatData = await ApiClient.get(`/api/flights/${flightId}/seatmap`);
-      const live = seatData.seats.filter((s) => s.source === 'LIVE');
       const totalSold = stats.FIRST.sold + stats.ECONOMY.sold;
       const totalRes = stats.FIRST.reserved + stats.ECONOMY.reserved;
       const totalAvail = stats.FIRST.available + stats.ECONOMY.available;
@@ -61,7 +104,29 @@ window.Views.flightDashboard = {
             <div class="panel"><h3 style="font-size:14px;margin-bottom:10px">${Util.esc(t('dashboardFlight.economyClass'))}</h3><div style="max-width:240px;margin:0 auto"><canvas id="fd-econ"></canvas></div></div>
             <div class="panel"><h3 style="font-size:14px;margin-bottom:10px">${Util.esc(t('dashboardFlight.revenue'))} (USD)</h3><canvas id="fd-rev"></canvas></div>
           </div>
-          <div class="panel"><h3 style="font-size:14px;margin-bottom:10px"><span id="fd-live-count"></span> ${Util.esc(t('dashboardFlight.liveCount'))}</h3><div id="fd-live"></div></div>`;
+          <div class="panel">
+            <div class="tickets-head">
+              <div><h3 style="font-size:15px;margin:0">${Util.esc(t('dashboardFlight.pax.title'))}</h3>
+                <p style="font-size:12.5px;color:var(--slate-500);margin:4px 0 0;max-width:70ch">${Util.esc(t('dashboardFlight.pax.hint'))}</p></div>
+              <div class="tickets-controls">
+                <select id="fd-status-filter" style="width:auto">
+                  <option value="BOUGHT">${Util.esc(t('dashboardFlight.pax.bought'))}</option>
+                  <option value="RESERVED">${Util.esc(t('dashboardFlight.pax.reserved'))}</option>
+                  <option value="ALL">${Util.esc(t('dashboardFlight.pax.allStatuses'))}</option>
+                </select>
+                <input type="search" id="fd-pax-q" placeholder="${Util.esc(t('dashboardFlight.pax.search'))}" style="width:200px">
+              </div>
+            </div>
+            <div class="status-chips" id="fd-src-chips" role="radiogroup" style="margin-bottom:10px"></div>
+            <div class="boarding-scroll"><table class="data-table report-table">
+              <thead><tr><th class="num">#</th><th>${Util.esc(t('receipt.seat'))}</th><th>${Util.esc(t('receipt.passenger'))}</th><th>${Util.esc(t('reports.boarding.cabin'))}</th>
+                <th>${Util.esc(t('receipt.statusLabel'))}</th><th>${Util.esc(t('dashboardFlight.pax.type'))}</th><th>${Util.esc(t('dashboardFlight.pax.node'))}</th><th>Sync</th><th>Lamport</th></tr></thead>
+              <tbody id="fd-pax-body"></tbody>
+            </table></div>
+            <div class="report__foot" id="fd-pax-count"></div>
+          </div>`;
+        body.querySelector('#fd-status-filter').onchange = (e) => { statusFilter = e.target.value; drawPassengers(); };
+        body.querySelector('#fd-pax-q').oninput = (e) => { query = e.target.value; drawPassengers(); };
         RouteMap.render(body.querySelector('#fd-route'), {
           routes: [{ from: flight.origin, to: flight.destination }], airports: Util.airportData.airports, showAll: true, caption: 'route',
         });
@@ -83,13 +148,8 @@ window.Views.flightDashboard = {
         [t('dashboardFlight.firstClass'), t('dashboardFlight.economyClass')],
         [{ label: 'USD', data: [stats.FIRST.revenue, stats.ECONOMY.revenue], backgroundColor: ['#f2a104', '#0b3d91'] }]);
 
-      body.querySelector('#fd-live-count').textContent = live.length;
-      body.querySelector('#fd-live').innerHTML = live.length === 0 ? '<span style="color:var(--slate-400);font-size:13px">—</span>' : `
-        <table class="data-table"><thead><tr><th>${Util.esc(t('receipt.seat'))}</th><th>${Util.esc(t('receipt.passenger'))}</th><th>${Util.esc(t('receipt.statusLabel'))}</th><th>Sync</th><th>Origen</th><th>Lamport</th></tr></thead><tbody>
-        ${live.map((s) => `<tr><td class="mono">${s.seatNumber}</td><td>${Util.esc(s.passengerName || '—')}</td><td>${Util.esc(s.status)}</td>
-          <td>${s.syncStatus === 'LOCAL_PENDING' ? '<span class="tag tag-pending">⏳ pending</span>' : '<span class="tag tag-synced">✓ synced</span>'}</td>
-          <td class="mono" style="font-size:12px">${Util.esc(s.originNode)}</td><td class="mono">${s.lamportTs}</td></tr>`).join('')}
-        </tbody></table>`;
+      seats = seatData.seats;
+      drawPassengers();
     };
 
     await draw();

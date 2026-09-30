@@ -9,6 +9,7 @@
     "flightDashboard": "Flight dashboard",
     "globalDashboard": "Global dashboard",
     "checkin": "QR check-in",
+    "reports": "Reports",
     "admin": "Administration"
   },
   "common": {
@@ -164,7 +165,23 @@
     "firstClass": "First class",
     "economyClass": "Economy class",
     "routeVisual": "Flight route",
-    "liveCount": "seats with real activity in this demo"
+    "liveCount": "seats with real activity in this demo",
+    "pax": {
+      "title": "Flight passengers",
+      "hint": "Every passenger with a seat on this flight. \"Real purchase\" was bought in the system (with its node, sync state and Lamport clock); \"Simulated\" is the 73% base occupancy required by the assignment.",
+      "all": "All",
+      "real": "Real purchases",
+      "simulated": "Simulated",
+      "realBadge": "Real purchase",
+      "simBadge": "Simulated",
+      "bought": "Bought (sold / checked in)",
+      "reserved": "Reserved only",
+      "allStatuses": "All occupied",
+      "search": "Search name or seat…",
+      "type": "Type",
+      "node": "Node",
+      "showing": "{{count}} passengers listed"
+    }
   },
   "dashboardGlobal": {
     "title": "Global network dashboard",
@@ -331,5 +348,63 @@
     "closed": "Closed",
     "count": "{{count}} flights",
     "note": "Only scheduled or delayed flights can be bought. Clicking a closed flight opens its dashboard."
+  },
+  "reports": {
+    "title": "Reports",
+    "subtitle": "Queries requested by the professor, computed live from the distributed system's data.",
+    "total": "Total",
+    "updated": "Updated {{time}} · refreshes every 5 s",
+    "conn": {
+      "title": "Connections per server",
+      "question": "Number of connections (client records to the database according to the connection criterion) of each distributed server and number of client connections to buy tickets.",
+      "criteria": "Connection criterion: each browser has its own identifier and each server records its sessions in its local store. A connection is a client's session with that server; if the client is idle for more than 30 minutes, its next request opens a new connection. A \"purchase\" connection is one that made at least one reservation or purchase. Server-to-server synchronization is not counted.",
+      "server": "Server",
+      "connections": "Client connections",
+      "purchaseConnections": "Purchase connections",
+      "clients": "Distinct clients",
+      "purchaseRequests": "Purchase requests",
+      "ticketsSold": "Tickets sold from here",
+      "dbRecords": "Records in its DB",
+      "activeNow": "Active now"
+    },
+    "boarding": {
+      "title": "Flight boarding list",
+      "question": "Boarding list for a flight code, including the passenger name and the assigned seat number.",
+      "code": "Flight code",
+      "show": "Show list",
+      "print": "Print",
+      "badCode": "Enter a valid flight code, for example RP000625.",
+      "notFound": "Flight {{code}} does not exist.",
+      "passengers": "Passengers",
+      "realPurchases": "Real purchases",
+      "filter": "Search passenger…",
+      "name": "Passenger name",
+      "seat": "Seat number",
+      "cabin": "Class",
+      "source": "Source",
+      "first": "Business",
+      "economy": "Economy",
+      "sourceLive": "Real purchase",
+      "sourceBase": "Simulated occupancy (73%)",
+      "withPurchases": "Flights with real purchases:",
+      "note": "Includes sold and checked-in seats. Besides real purchases, every flight has the 73% base occupancy required by the assignment, with generated passengers.",
+      "onlyLive": "Only real purchases"
+    },
+    "fleet": {
+      "title": "Largest-capacity aircraft",
+      "question": "Largest-capacity aircraft in the fleet, with capacity per class (business and economy).",
+      "answer": "Largest capacity in the fleet",
+      "units": "{{count}} aircraft of this model: {{ids}}",
+      "business": "Business",
+      "economy": "Economy",
+      "total": "Total capacity",
+      "byModel": "Capacity by model",
+      "model": "Model",
+      "fleetSize": "Aircraft",
+      "allAircraft": "See all {{count}} aircraft in the fleet",
+      "registration": "Registration (aircraft_id)",
+      "flights": "Assigned flights",
+      "note": "The dataset identifies each aircraft by aircraft_id (1–50), used here as its registration. Business class corresponds to the system's first class."
+    }
   }
 }

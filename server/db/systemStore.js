@@ -116,6 +116,17 @@ class SystemStore {
 
       CREATE INDEX IF NOT EXISTS idx_replica_flight ON replica_tx(flight_id);
       CREATE INDEX IF NOT EXISTS idx_sagas_status ON sagas(status);
+
+      CREATE TABLE IF NOT EXISTS client_sessions (
+        id TEXT PRIMARY KEY,
+        client_id TEXT NOT NULL,
+        ip TEXT,
+        started_at INTEGER NOT NULL,
+        last_seen INTEGER NOT NULL,
+        requests INTEGER NOT NULL DEFAULT 0,
+        purchase_requests INTEGER NOT NULL DEFAULT 0
+      );
+      CREATE INDEX IF NOT EXISTS idx_client_sessions_client ON client_sessions(client_id);
       CREATE INDEX IF NOT EXISTS idx_outbox_target ON outbox(target_node, delivered);
     `);
   }
@@ -269,6 +280,37 @@ class SystemStore {
       this.enqueueOutbox({ id: `REQUEST-${tx.id}`, targetNode: tx.ownerNode,
         eventType: 'SEAT_TX_REQUEST', payload: { kind: 'SEAT_TX_REQUEST', event: tx } });
     })();
+  }
+
+  // ---------- Conexiones de clientes (reporte de conexiones por servidor) ----------
+  saveClientSession(s) {
+    this.db
+      .prepare(`INSERT INTO client_sessions (id, client_id, ip, started_at, last_seen, requests, purchase_requests)
+         VALUES (@id, @clientId, @ip, @startedAt, @lastSeen, @requests, @purchaseRequests)
+         ON CONFLICT(id) DO UPDATE SET last_seen=excluded.last_seen, requests=excluded.requests, purchase_requests=excluded.purchase_requests`)
+      .run(s);
+  }
+
+  connectionStats(nowMs = Date.now(), activeWindowMs = 5 * 60 * 1000) {
+    const row = this.db.prepare(`SELECT
+        COUNT(*) AS connections,
+        COUNT(DISTINCT client_id) AS clients,
+        COALESCE(SUM(requests), 0) AS requests,
+        COALESCE(SUM(CASE WHEN purchase_requests > 0 THEN 1 ELSE 0 END), 0) AS purchaseConnections,
+        COALESCE(SUM(purchase_requests), 0) AS purchaseRequests,
+        COALESCE(SUM(CASE WHEN last_seen >= ? THEN 1 ELSE 0 END), 0) AS activeNow,
+        MIN(started_at) AS since
+      FROM client_sessions`).get(nowMs - activeWindowMs);
+    const tickets = this.db.prepare(`SELECT COUNT(*) AS n FROM replica_tx
+      WHERE origin_node = ? AND action_type = 'PURCHASE' AND status = 'SOLD' AND sync_status = 'SYNCED'`).get(this.nodeId).n;
+    return { ...row, ticketsSoldHere: tickets };
+  }
+
+  /** Vuelos con compras o reservas reales, los mas recientes primero (atajos para la lista de embarque). */
+  flightsWithLiveTickets(limit = 8) {
+    return this.db.prepare(`SELECT flight_id AS flightId, COUNT(*) AS tickets, MAX(created_at) AS lastAt FROM replica_tx
+      WHERE action_type IN ('PURCHASE','RESERVE','CHECKIN') AND status IN ('SOLD','RESERVED','CHECKED_IN') AND sync_status = 'SYNCED'
+      GROUP BY flight_id ORDER BY lastAt DESC LIMIT ?`).all(limit);
   }
 
   // ---------- Sagas de compra combinada (el estado del orquestador es durable) ----------

@@ -13,6 +13,7 @@ function buildItineraryRouter(ctx) {
   // Compra combinada: inicia la saga en ESTE nodo (orquestador) y devuelve su estado actual.
   router.post('/itineraries', async (req, res) => {
     const { legs, passengerName, passengerEmail } = req.body || {};
+    ctx.connectionTracker?.countPurchase(req.clientSession);
     try {
       const saga = await ctx.sagaService.start({ legs, passengerName, passengerEmail });
       res.status(201).json(withFlights(saga));

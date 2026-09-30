@@ -9,6 +9,7 @@
     "flightDashboard": "Panel del vuelo",
     "globalDashboard": "Panel global",
     "checkin": "Check-in QR",
+    "reports": "Reportes",
     "admin": "Administración"
   },
   "common": {
@@ -164,7 +165,23 @@
     "firstClass": "Primera clase",
     "economyClass": "Clase turista",
     "routeVisual": "Ruta del vuelo",
-    "liveCount": "asientos con actividad real en esta demo"
+    "liveCount": "asientos con actividad real en esta demo",
+    "pax": {
+      "title": "Pasajeros del vuelo",
+      "hint": "Todos los pasajeros con asiento en este vuelo. «Compra real» es una compra hecha en el sistema (con su nodo, sincronización y reloj de Lamport); «Simulado» es la ocupación base del 73 % que pide el enunciado.",
+      "all": "Todos",
+      "real": "Compras reales",
+      "simulated": "Simulados",
+      "realBadge": "Compra real",
+      "simBadge": "Simulado",
+      "bought": "Compraron (vendido / check-in)",
+      "reserved": "Solo reservados",
+      "allStatuses": "Todos los ocupados",
+      "search": "Buscar nombre o asiento…",
+      "type": "Tipo",
+      "node": "Nodo",
+      "showing": "{{count}} pasajeros en la lista"
+    }
   },
   "dashboardGlobal": {
     "title": "Panel global de la red",
@@ -331,5 +348,63 @@
     "closed": "Cerrada",
     "count": "{{count}} vuelos",
     "note": "Solo los vuelos programados o demorados se pueden comprar. Al hacer clic en un vuelo cerrado se abre su panel."
+  },
+  "reports": {
+    "title": "Reportes",
+    "subtitle": "Consultas pedidas por el ingeniero, calculadas en vivo con los datos del sistema distribuido.",
+    "total": "Total",
+    "updated": "Actualizado {{time}} · se refresca solo cada 5 s",
+    "conn": {
+      "title": "Conexiones por servidor",
+      "question": "Cantidad de conexiones (registros de clientes a la base de datos según su criterio de conexión) de cada servidor distribuido y cantidad de conexiones de clientes para comprar pasajes.",
+      "criteria": "Criterio de conexión: cada navegador tiene un identificador propio y cada servidor registra sus sesiones en su almacén local. Una conexión es una sesión de un cliente con ese servidor; si el cliente pasa más de 30 minutos sin actividad, su siguiente petición abre una conexión nueva. Una conexión «para compras» es la que hizo al menos una reserva o compra. La sincronización entre servidores no cuenta.",
+      "server": "Servidor",
+      "connections": "Conexiones de clientes",
+      "purchaseConnections": "Conexiones para compras",
+      "clients": "Clientes distintos",
+      "purchaseRequests": "Solicitudes de compra",
+      "ticketsSold": "Pasajes vendidos desde aquí",
+      "dbRecords": "Registros en su BD",
+      "activeNow": "Activos ahora"
+    },
+    "boarding": {
+      "title": "Lista de embarque de un vuelo",
+      "question": "Lista de embarque para un código de vuelo, con el nombre del pasajero y el número de asiento asignado.",
+      "code": "Código de vuelo",
+      "show": "Ver lista",
+      "print": "Imprimir",
+      "badCode": "Escribe un código de vuelo válido, por ejemplo RP000625.",
+      "notFound": "No existe el vuelo {{code}}.",
+      "passengers": "Pasajeros",
+      "realPurchases": "Compras reales",
+      "filter": "Buscar pasajero…",
+      "name": "Nombre del pasajero",
+      "seat": "Número de asiento",
+      "cabin": "Clase",
+      "source": "Origen",
+      "first": "Ejecutiva",
+      "economy": "Económica",
+      "sourceLive": "Compra real",
+      "sourceBase": "Ocupación simulada (73 %)",
+      "withPurchases": "Vuelos con compras reales:",
+      "note": "Incluye los asientos vendidos y con check-in. Además de las compras reales, cada vuelo tiene la ocupación base del 73 % que pide el enunciado, con pasajeros generados.",
+      "onlyLive": "Solo compras reales"
+    },
+    "fleet": {
+      "title": "Avión de mayor capacidad",
+      "question": "Avión de mayor capacidad de la flota, con la capacidad por clase (ejecutiva y económica).",
+      "answer": "Mayor capacidad de la flota",
+      "units": "{{count}} aviones de este modelo: {{ids}}",
+      "business": "Ejecutiva",
+      "economy": "Económica",
+      "total": "Capacidad total",
+      "byModel": "Capacidad por modelo",
+      "model": "Modelo",
+      "fleetSize": "Aviones",
+      "allAircraft": "Ver los {{count}} aviones de la flota",
+      "registration": "Matrícula (aircraft_id)",
+      "flights": "Vuelos asignados",
+      "note": "El dataset identifica cada avión con aircraft_id (1–50), que se usa como matrícula. La clase ejecutiva corresponde a la primera clase del sistema."
+    }
   }
 }

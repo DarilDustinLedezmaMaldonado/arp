@@ -4,7 +4,10 @@
     {
       "name": "arp-local",
       "runtimeExecutable": "npm",
-      "runtimeArgs": ["run", "local:all"],
+      "runtimeArgs": [
+        "run",
+        "local:all"
+      ],
       "port": 4001
     }
   ]

@@ -39,6 +39,8 @@
     "chart.js": "^4.5.1",
     "concurrently": "^8.2.2",
     "cross-env": "^7.0.3",
-    "html5-qrcode": "^2.3.8"
+    "html5-qrcode": "^2.3.8",
+    "topojson-client": "^3.1.0",
+    "world-atlas": "^2.0.2"
   }
 }

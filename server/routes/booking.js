@@ -15,6 +15,7 @@ function buildBookingRouter(ctx) {
     if ((actionType === 'RESERVE' || actionType === 'PURCHASE') && !passengerName) {
       return res.status(400).json({ error: 'MISSING_PASSENGER_NAME' });
     }
+    if (actionType === 'RESERVE' || actionType === 'PURCHASE') ctx.connectionTracker?.countPurchase(req.clientSession);
     try {
       const result = await ctx.bookingService.requestSeatAction({
         flightId,

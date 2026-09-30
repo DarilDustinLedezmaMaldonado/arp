@@ -16,6 +16,7 @@
     { re: /^#\/planner$/, nav: 'routePlanner', view: 'planner' },
     { re: /^#\/status$/, nav: 'flightStatus', view: 'flightStatus' },
     { re: /^#\/checkin$/, nav: 'checkin', view: 'checkin' },
+    { re: /^#\/reports$/, nav: 'reports', view: 'reports' },
     { re: /^#\/admin$/, nav: 'admin', view: 'admin' },
   ];
 
@@ -27,6 +28,7 @@
     { key: 'flightDashboard', href: '#/dashboard/flight' },
     { key: 'globalDashboard', href: '#/dashboard/global' },
     { key: 'checkin', href: '#/checkin' },
+    { key: 'reports', href: '#/reports' },
     { key: 'admin', href: '#/admin' },
   ];
 

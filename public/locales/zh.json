@@ -9,6 +9,7 @@
     "flightDashboard": "航班看板",
     "globalDashboard": "全局看板",
     "checkin": "二维码值机",
+    "reports": "报告",
     "admin": "管理"
   },
   "common": {
@@ -164,7 +165,23 @@
     "firstClass": "头等舱",
     "economyClass": "经济舱",
     "routeVisual": "航线",
-    "liveCount": "个座位在本次演示中有真实操作"
+    "liveCount": "个座位在本次演示中有真实操作",
+    "pax": {
+      "title": "航班乘客",
+      "hint": "本航班所有有座位的乘客。“真实购买”是在系统中完成的购买（含节点、同步状态和 Lamport 时钟）；“模拟”是题目要求的 73% 基础上座率。",
+      "all": "全部",
+      "real": "真实购买",
+      "simulated": "模拟",
+      "realBadge": "真实购买",
+      "simBadge": "模拟",
+      "bought": "已购买（已售 / 已值机）",
+      "reserved": "仅预留",
+      "allStatuses": "全部已占用",
+      "search": "搜索姓名或座位…",
+      "type": "类型",
+      "node": "节点",
+      "showing": "列表中 {{count}} 名乘客"
+    }
   },
   "dashboardGlobal": {
     "title": "全网看板",
@@ -331,5 +348,63 @@
     "closed": "已停售",
     "count": "{{count}} 个航班",
     "note": "只有计划中或延误的航班可以购买。点击已停售的航班会打开其面板。"
+  },
+  "reports": {
+    "title": "报告",
+    "subtitle": "老师要求的查询，基于分布式系统的数据实时计算。",
+    "total": "合计",
+    "updated": "更新于 {{time}} · 每 5 秒自动刷新",
+    "conn": {
+      "title": "各服务器的连接数",
+      "question": "各分布式服务器的连接数（按连接标准统计的客户端数据库记录），以及客户端为购票而建立的连接数。",
+      "criteria": "连接标准：每个浏览器都有自己的标识，每台服务器在本地存储中记录其会话。一次连接即某个客户端与该服务器的一次会话；若客户端超过 30 分钟无活动，下一次请求将开启新的连接。“购票连接”指至少进行过一次预留或购买的连接。服务器之间的同步不计入。",
+      "server": "服务器",
+      "connections": "客户端连接",
+      "purchaseConnections": "购票连接",
+      "clients": "不同客户端",
+      "purchaseRequests": "购票请求",
+      "ticketsSold": "从此处售出的机票",
+      "dbRecords": "其数据库中的记录",
+      "activeNow": "当前活跃"
+    },
+    "boarding": {
+      "title": "航班登机名单",
+      "question": "某航班代码的登机名单，包括乘客姓名和分配的座位号。",
+      "code": "航班代码",
+      "show": "查看名单",
+      "print": "打印",
+      "badCode": "请输入有效的航班代码，例如 RP000625。",
+      "notFound": "航班 {{code}} 不存在。",
+      "passengers": "乘客",
+      "realPurchases": "真实购买",
+      "filter": "搜索乘客…",
+      "name": "乘客姓名",
+      "seat": "座位号",
+      "cabin": "舱位",
+      "source": "来源",
+      "first": "商务舱",
+      "economy": "经济舱",
+      "sourceLive": "真实购买",
+      "sourceBase": "模拟上座率（73%）",
+      "withPurchases": "有真实购买的航班：",
+      "note": "包括已售出和已办理登机的座位。除真实购买外，每个航班还有题目要求的 73% 基础上座率，乘客为自动生成。",
+      "onlyLive": "仅显示真实购买"
+    },
+    "fleet": {
+      "title": "载客量最大的飞机",
+      "question": "机队中载客量最大的飞机，并按舱位（商务舱和经济舱）区分载客量。",
+      "answer": "机队中载客量最大",
+      "units": "该机型共 {{count}} 架：{{ids}}",
+      "business": "商务舱",
+      "economy": "经济舱",
+      "total": "总载客量",
+      "byModel": "各机型载客量",
+      "model": "机型",
+      "fleetSize": "飞机数",
+      "allAircraft": "查看机队全部 {{count}} 架飞机",
+      "registration": "注册号（aircraft_id）",
+      "flights": "分配的航班",
+      "note": "数据集用 aircraft_id（1–50）标识每架飞机，此处作为注册号。商务舱对应系统中的头等舱。"
+    }
   }
 }

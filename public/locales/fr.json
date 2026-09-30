@@ -9,6 +9,7 @@
     "flightDashboard": "Tableau du vol",
     "globalDashboard": "Tableau global",
     "checkin": "Enregistrement QR",
+    "reports": "Rapports",
     "admin": "Administration"
   },
   "common": {
@@ -164,7 +165,23 @@
     "firstClass": "Première classe",
     "economyClass": "Classe économique",
     "routeVisual": "Trajet du vol",
-    "liveCount": "sièges avec activité réelle dans cette démo"
+    "liveCount": "sièges avec activité réelle dans cette démo",
+    "pax": {
+      "title": "Passagers du vol",
+      "hint": "Tous les passagers ayant un siège sur ce vol. « Achat réel » a été acheté dans le système (avec son nœud, sa synchronisation et son horloge de Lamport) ; « Simulé » est l'occupation de base de 73 % exigée par l'énoncé.",
+      "all": "Tous",
+      "real": "Achats réels",
+      "simulated": "Simulés",
+      "realBadge": "Achat réel",
+      "simBadge": "Simulé",
+      "bought": "Ont acheté (vendu / enregistré)",
+      "reserved": "Réservés uniquement",
+      "allStatuses": "Tous les occupés",
+      "search": "Rechercher nom ou siège…",
+      "type": "Type",
+      "node": "Nœud",
+      "showing": "{{count}} passagers dans la liste"
+    }
   },
   "dashboardGlobal": {
     "title": "Tableau global du réseau",
@@ -331,5 +348,63 @@
     "closed": "Fermée",
     "count": "{{count}} vols",
     "note": "Seuls les vols programmés ou retardés peuvent être achetés. Un clic sur un vol fermé ouvre son tableau de bord."
+  },
+  "reports": {
+    "title": "Rapports",
+    "subtitle": "Requêtes demandées par le professeur, calculées en direct avec les données du système distribué.",
+    "total": "Total",
+    "updated": "Mis à jour {{time}} · actualisé toutes les 5 s",
+    "conn": {
+      "title": "Connexions par serveur",
+      "question": "Nombre de connexions (enregistrements de clients dans la base de données selon le critère de connexion) de chaque serveur distribué et nombre de connexions de clients pour acheter des billets.",
+      "criteria": "Critère de connexion : chaque navigateur a son propre identifiant et chaque serveur enregistre ses sessions dans son stockage local. Une connexion est une session d'un client avec ce serveur ; si le client reste inactif plus de 30 minutes, sa requête suivante ouvre une nouvelle connexion. Une connexion « d'achat » est celle qui a fait au moins une réservation ou un achat. La synchronisation entre serveurs n'est pas comptée.",
+      "server": "Serveur",
+      "connections": "Connexions de clients",
+      "purchaseConnections": "Connexions d'achat",
+      "clients": "Clients distincts",
+      "purchaseRequests": "Demandes d'achat",
+      "ticketsSold": "Billets vendus d'ici",
+      "dbRecords": "Enregistrements dans sa BD",
+      "activeNow": "Actifs maintenant"
+    },
+    "boarding": {
+      "title": "Liste d'embarquement d'un vol",
+      "question": "Liste d'embarquement pour un code de vol, avec le nom du passager et le numéro de siège attribué.",
+      "code": "Code du vol",
+      "show": "Voir la liste",
+      "print": "Imprimer",
+      "badCode": "Saisissez un code de vol valide, par exemple RP000625.",
+      "notFound": "Le vol {{code}} n'existe pas.",
+      "passengers": "Passagers",
+      "realPurchases": "Achats réels",
+      "filter": "Rechercher un passager…",
+      "name": "Nom du passager",
+      "seat": "Numéro de siège",
+      "cabin": "Classe",
+      "source": "Origine",
+      "first": "Affaires",
+      "economy": "Économique",
+      "sourceLive": "Achat réel",
+      "sourceBase": "Occupation simulée (73 %)",
+      "withPurchases": "Vols avec achats réels :",
+      "note": "Comprend les sièges vendus et enregistrés. En plus des achats réels, chaque vol a l'occupation de base de 73 % exigée par l'énoncé, avec des passagers générés.",
+      "onlyLive": "Achats réels uniquement"
+    },
+    "fleet": {
+      "title": "Avion de plus grande capacité",
+      "question": "Avion de plus grande capacité de la flotte, avec la capacité par classe (affaires et économique).",
+      "answer": "Plus grande capacité de la flotte",
+      "units": "{{count}} avions de ce modèle : {{ids}}",
+      "business": "Affaires",
+      "economy": "Économique",
+      "total": "Capacité totale",
+      "byModel": "Capacité par modèle",
+      "model": "Modèle",
+      "fleetSize": "Avions",
+      "allAircraft": "Voir les {{count}} avions de la flotte",
+      "registration": "Immatriculation (aircraft_id)",
+      "flights": "Vols attribués",
+      "note": "Le jeu de données identifie chaque avion par aircraft_id (1–50), utilisé comme immatriculation. La classe affaires correspond à la première classe du système."
+    }
   }
 }

@@ -15,6 +15,10 @@ function buildFlightsRouter(ctx) {
     res.json(aircraftData);
   });
 
+  router.get('/routes', (req, res) => {
+    res.json({ routes: ctx.flightCache.routes() });
+  });
+
   router.get('/flights', (req, res) => {
     const { origin, destination, dateFrom, dateTo, status, sort, limit, offset } = req.query;
     const result = ctx.flightCache.search({

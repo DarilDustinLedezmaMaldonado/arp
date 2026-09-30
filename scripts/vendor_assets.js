@@ -35,4 +35,25 @@ for (const [family, weight] of fontFiles) {
   copy(path.join(ROOT, 'node_modules', '@fontsource', family, 'files', file), path.join(FONTS, file));
 }
 
+console.log('Generando mapa del mundo (Natural Earth 1:110m, dominio publico)...');
+{
+  const topojson = require('topojson-client');
+  const world = require('world-atlas/countries-110m.json');
+  const round = (n) => Math.round(n * 10) / 10;
+  const clean = (line) => line.map(([x, y]) => [round(x), round(y)])
+    .filter((p, i, arr) => i === 0 || p[0] !== arr[i - 1][0] || p[1] !== arr[i - 1][1]);
+  // Tierra firme como anillos de poligonos y fronteras entre paises como lineas.
+  const land = topojson.feature(world, world.objects.land);
+  const rings = [];
+  for (const f of land.features || [land]) {
+    const g = f.geometry || f;
+    for (const poly of g.type === 'Polygon' ? [g.coordinates] : g.coordinates) for (const ring of poly) rings.push(clean(ring));
+  }
+  const borders = topojson.mesh(world, world.objects.countries, (a, b) => a !== b);
+  const lines = (borders.type === 'MultiLineString' ? borders.coordinates : [borders.coordinates]).map(clean);
+  const dest = path.join(VENDOR, 'world-110m.json');
+  fs.writeFileSync(dest, JSON.stringify({ source: 'Natural Earth 1:110m via world-atlas', rings, lines }));
+  console.log('  ->', path.relative(ROOT, dest));
+}
+
 console.log('Listo. Si agregaste pesos/familias nuevas, actualiza tambien public/css/main.css (@font-face).');

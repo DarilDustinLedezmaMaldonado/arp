@@ -48,11 +48,10 @@ window.Views.globalDashboard = {
         <div class="panel"><h4 style="font-size:13px;margin-bottom:8px">${Util.esc(t('dashboardGlobal.pendingOutbox'))}</h4><div id="gd-outbox" style="font-size:13px"></div></div>
       </div>`;
 
-    // mapa de red con TODAS las rutas directas existentes (matriz economica)
+    // mapa de red con TODAS las rutas directas que tienen vuelos (endpoint publico: no pide clave de administracion)
     try {
-      const m = await ApiClient.get('/api/admin/matrix/economy');
-      const routes = [];
-      m.order.forEach((from, i) => m.order.forEach((to, j) => { if (i !== j && m.matrix[i][j] !== null) routes.push({ from, to, highlight: false }); }));
+      const { routes: pairs } = await ApiClient.get('/api/routes');
+      const routes = pairs.map((r) => ({ from: r.from, to: r.to, highlight: false }));
       RouteMap.render(root.querySelector('#gd-map'), { routes, airports: Util.airportData.airports, showAll: true, animate: false, caption: 'network' });
     } catch { /* el mapa es decorativo */ }
 
