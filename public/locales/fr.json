@@ -3,6 +3,7 @@
   "_label": "Français",
   "nav": {
     "search": "Rechercher des vols",
+    "flightStatus": "État des vols",
     "wallet": "Wallet / Mes billets",
     "routePlanner": "Planificateur d'itinéraires",
     "flightDashboard": "Tableau du vol",
@@ -28,7 +29,8 @@
   },
   "header": {
     "brand": "Aerolíneas Rafael Pabón",
-    "nodeBadgeTitle": "Vos requêtes vont vers {{node}} ({{url}}). Cette page a été chargée depuis {{origin}}."
+    "nodeBadgeTitle": "Pour votre pays ({{country}}), vous êtes servi par {{node}} ({{url}}). Cette page a été chargée depuis {{origin}}.",
+    "country": "Pays"
   },
   "search": {
     "eyebrow": "Réservation en ligne · réseau de 3 nœuds",
@@ -70,7 +72,9 @@
     "noConnections": "Pas de correspondance avec 1 escale non plus (attente max. 24 h) à cette date. Essayez un autre jour.",
     "anyDateWithStop": "N'importe quelle date (avec escale)",
     "legsBookedSeparately": "Acheté comme un seul itinéraire : tous les segments ou aucun.",
-    "buyItinerary": "Choisir les sièges et acheter"
+    "buyItinerary": "Choisir les sièges et acheter",
+    "onlySellable": "Seuls les vols en vente sont affichés (programmés ou retardés).",
+    "seeAllStatuses": "Voir tous les vols"
   },
   "wallet": {
     "addGoogle": "Ajouter à Google Wallet",
@@ -94,7 +98,8 @@
     "LANDED": "Atterri",
     "ARRIVED": "Arrivé",
     "DELAYED": "Retardé",
-    "CANCELLED": "Annulé"
+    "CANCELLED": "Annulé",
+    "UNKNOWN": "Inconnu"
   },
   "booking": {
     "back": "← Retour aux résultats",
@@ -113,7 +118,8 @@
     "conflictWarning": "Quelqu'un d'autre a réclamé ce siège presque en même temps et, après résolution du conflit entre nœuds, le vôtre n'a pas pu être confirmé. Choisissez un autre siège.",
     "successTitle": "Tout est prêt !",
     "viewReceipt": "Voir mon billet",
-    "ownerNode": "Nœud propriétaire de ce vol"
+    "ownerNode": "Nœud propriétaire de ce vol",
+    "notSellable": "Ce vol n'est plus en vente (état : {{status}})."
   },
   "seatLegend": {
     "available": "Disponible",
@@ -237,7 +243,25 @@
     "clockTitle": "Horloge de ce nœud",
     "lamport": "Lamport",
     "vector": "Vectorielle",
-    "accessKey": "Clé d’administration"
+    "accessKey": "Clé d’administration",
+    "tickets": {
+      "title": "Billets récents",
+      "hint": "Derniers billets des 3 nœuds. La colonne Répliques indique si chaque nœud a déjà reçu l'achat : ✓ confirmé, ⏳ pas encore arrivé, ✗ nœud hors ligne. Achetez depuis un PC et regardez ici comment il apparaît sur les autres.",
+      "typePurchase": "Achats",
+      "typeReserve": "Réservations",
+      "typeAll": "Achats et réservations",
+      "search": "Passager, PNR ou vol",
+      "when": "Date",
+      "boughtAt": "Fait sur",
+      "owner": "Propriétaire",
+      "replicas": "Répliques",
+      "open": "Voir",
+      "empty": "Pas encore de billets.",
+      "notYet": "pas encore arrivé",
+      "conflictLost": "Conflit perdu",
+      "footer": "{{count}} billets · {{reachable}}/{{total}} nœuds ont répondu · mis à jour {{time}}",
+      "nodes": "Nœuds (fait → propriétaire)"
+    }
   },
   "itinerary": {
     "subtitle": "Itinéraire de {{count}} segments · un seul achat",
@@ -287,5 +311,25 @@
     "notFound": "Itinéraire introuvable sur le nœud qui l'a créé (est-il hors ligne ?).",
     "pnr": "Code de réservation",
     "backToSearch": "Retour à la recherche"
+  },
+  "countryGroups": {
+    "northCentral": "Amérique du Nord et centrale",
+    "south": "Amérique du Sud",
+    "europe": "Europe",
+    "asia": "Asie et Moyen-Orient",
+    "africa": "Afrique",
+    "oceania": "Océanie"
+  },
+  "statusBoard": {
+    "title": "État des vols",
+    "subtitle": "Tous les vols du jeu de données avec leur état réel : programmés, retardés, embarquement, en vol, atterris ou annulés.",
+    "date": "Date",
+    "all": "Tous",
+    "gate": "Porte",
+    "sale": "Vente",
+    "onSale": "En vente",
+    "closed": "Fermée",
+    "count": "{{count}} vols",
+    "note": "Seuls les vols programmés ou retardés peuvent être achetés. Un clic sur un vol fermé ouvre son tableau de bord."
   }
 }

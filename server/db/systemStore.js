@@ -221,6 +221,27 @@ class SystemStore {
     return row ? rowToTx(row) : null;
   }
 
+  /** Pasajes recientes (compras y/o reservas) que este nodo conoce, propios o replicados. */
+  recentTickets({ type = 'PURCHASE', q = '', limit = 30 } = {}) {
+    const types = type === 'ALL' ? ['PURCHASE', 'RESERVE'] : [type];
+    const like = `%${String(q).trim()}%`;
+    return this.db
+      .prepare(`SELECT * FROM replica_tx WHERE action_type IN (${types.map(() => '?').join(',')})
+        AND (? = '%%' OR passenger_name LIKE ? OR pnr LIKE ? OR flight_id LIKE ? OR id LIKE ?)
+        ORDER BY created_at DESC LIMIT ?`)
+      .all(...types, like, like, like, like, like, limit)
+      .map(rowToTx);
+  }
+
+  /** Estado con que este nodo conoce cada transaccion (null si aun no le llego). */
+  replicaStatusByIds(ids) {
+    if (!ids.length) return {};
+    const rows = this.db.prepare(`SELECT id, status, sync_status FROM replica_tx WHERE id IN (${ids.map(() => '?').join(',')})`).all(...ids);
+    const out = Object.fromEntries(ids.map((id) => [id, null]));
+    for (const r of rows) out[r.id] = { status: r.status, syncStatus: r.sync_status };
+    return out;
+  }
+
   prepareDecision(tx) {
     this.db.prepare('INSERT OR IGNORE INTO decisions (id, flight_id, seat_number, payload_json) VALUES (?, ?, ?, ?)')
       .run(tx.id, tx.flightId, tx.seatNumber, JSON.stringify(tx));

@@ -30,6 +30,8 @@ window.Views.admin = {
       <h3 style="font-size:15px;margin:0 0 10px">${Util.esc(t('admin.faultTitle'))}</h3>
       <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:14px;margin-bottom:28px" id="ad-nodes"></div>
 
+      <div class="panel" style="margin-bottom:28px" id="ad-tickets"></div>
+
       <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(320px,1fr));gap:18px;margin-bottom:28px">
         <div class="panel" id="ad-config"></div>
         <div class="panel" id="ad-clock"></div>
@@ -80,6 +82,95 @@ window.Views.admin = {
         };
       });
     };
+
+    // ---------------- Pasajes recientes (de los 3 nodos) y en que nodos ya estan replicados ----------------
+    const tk = root.querySelector('#ad-tickets');
+    tk.innerHTML = `
+      <div class="tickets-head">
+        <div><h4 style="font-size:14px;margin:0">${Util.esc(t('admin.tickets.title'))}</h4>
+          <p style="font-size:12.5px;color:var(--slate-500);margin:4px 0 0;max-width:70ch">${Util.esc(t('admin.tickets.hint'))}</p></div>
+        <div class="tickets-controls">
+          <select id="tk-type" style="width:auto">
+            <option value="PURCHASE">${Util.esc(t('admin.tickets.typePurchase'))}</option>
+            <option value="RESERVE">${Util.esc(t('admin.tickets.typeReserve'))}</option>
+            <option value="ALL">${Util.esc(t('admin.tickets.typeAll'))}</option>
+          </select>
+          <input id="tk-q" type="search" placeholder="${Util.esc(t('admin.tickets.search'))}" style="width:220px">
+          <button class="btn btn-ghost btn-sm" id="tk-refresh">↻</button>
+        </div>
+      </div>
+      <div style="overflow-x:auto"><table class="data-table tickets-table">
+        <thead><tr>
+          <th>${Util.esc(t('admin.tickets.when'))}</th><th>PNR</th><th>${Util.esc(t('receipt.passenger'))}</th><th>${Util.esc(t('search.colFlight'))}</th>
+          <th>${Util.esc(t('receipt.seat'))}</th><th>${Util.esc(t('receipt.statusLabel'))}</th>
+          <th title="${Util.esc(t('admin.tickets.boughtAt'))} → ${Util.esc(t('admin.tickets.owner'))}">${Util.esc(t('admin.tickets.nodes'))}</th>
+          <th>${Util.esc(t('admin.tickets.replicas'))}</th><th></th>
+        </tr></thead>
+        <tbody id="tk-body"></tbody>
+      </table></div>
+      <div id="tk-foot" style="font-size:12px;color:var(--slate-400);margin-top:8px"></div>`;
+
+    const statusText = (s) => {
+      const key = { SOLD: 'seatLegend.sold', RESERVED: 'seatLegend.reserved', CHECKED_IN: 'seatLegend.checkedIn', REFUNDED: 'receipt.statusRefunded',
+        AVAILABLE: 'receipt.statusReleased', PENDING: 'receipt.pendingConfirmation', REJECTED: 'receipt.rejected', CONFLICT_LOST: 'admin.tickets.conflictLost' }[s];
+      return key ? t(key) : s;
+    };
+    const statusTone = (s) => ({ SOLD: 'tag-synced', CHECKED_IN: 'tag-synced', RESERVED: 'tag-pending', PENDING: 'tag-pending' }[s] || 'tag-conflict');
+    const shortNode = (id) => { const n = ApiClient.nodeById(id); return n ? `${n.flag} ${id.replace(/^NODE_/, '')}` : id; };
+
+    const drawTickets = async () => {
+      const params = { type: tk.querySelector('#tk-type').value, q: tk.querySelector('#tk-q').value.trim() || undefined, limit: 30 };
+      const nodes = ApiClient.nodes();
+      const lists = await Promise.allSettled(nodes.map((n) => ApiClient.get('/api/admin/tickets', params, n.url)));
+      // Union de lo que conoce cada nodo; ante duplicados gana la version confirmada por el dueno.
+      const byId = new Map();
+      lists.forEach((r) => {
+        if (r.status !== 'fulfilled') return;
+        for (const tx of r.value.tickets) {
+          const prev = byId.get(tx.id);
+          if (!prev || (prev.syncStatus !== 'SYNCED' && tx.syncStatus === 'SYNCED') || (prev.lamportTs || 0) < (tx.lamportTs || 0)) byId.set(tx.id, tx);
+        }
+      });
+      const rows = [...byId.values()].sort((a, b) => b.createdAt.localeCompare(a.createdAt)).slice(0, 30);
+      const ids = rows.map((r) => r.id);
+      const presence = await Promise.all(nodes.map((n, i) => (lists[i].status === 'fulfilled' && ids.length
+        ? ApiClient.get('/api/admin/tickets/presence', { ids: ids.join(',') }, n.url).then((p) => p.presence).catch(() => null)
+        : Promise.resolve(lists[i].status === 'fulfilled' ? {} : null))));
+
+      const replicaChips = (tx) => nodes.map((n, i) => {
+        const p = presence[i];
+        const code = n.id.replace(/^NODE_/, '');
+        if (!p) return `<span class="rep-chip off" title="${Util.esc(n.label)}: offline">${code} ✗</span>`;
+        const seen = p[tx.id];
+        const ok = seen && seen.syncStatus === 'SYNCED' && seen.status !== 'PENDING';
+        return `<span class="rep-chip ${ok ? 'ok' : 'wait'}" title="${Util.esc(n.label)}: ${Util.esc(seen ? seen.status : t('admin.tickets.notYet'))}">${code} ${ok ? '✓' : '⏳'}</span>`;
+      }).join('');
+
+      tk.querySelector('#tk-body').innerHTML = rows.length ? rows.map((tx) => {
+        const f = tx.flight || {};
+        const shown = tx.currentStatus && tx.currentStatus !== tx.status ? tx.currentStatus : tx.status;
+        return `<tr>
+          <td class="mono" style="white-space:nowrap">${new Date(tx.createdAt).toLocaleTimeString(window.I18n.lang)}
+            <div style="font-size:11px;color:var(--slate-500)">${new Date(tx.createdAt).toLocaleDateString(window.I18n.lang, { day: '2-digit', month: 'short' })} · L${tx.lamportTs}</div></td>
+          <td class="mono">${Util.esc(tx.pnr || '—')}</td>
+          <td>${Util.esc(tx.passengerName || '—')}</td>
+          <td style="white-space:nowrap"><span class="mono">${Util.flightNumber(tx.flightId)}</span> ${Util.esc(f.origin || '')}→${Util.esc(f.destination || '')}
+            <div style="font-size:11.5px;color:var(--slate-500)">${Util.esc(f.date || '')} ${Util.esc(f.time || '')}</div></td>
+          <td class="mono">${Util.esc(tx.seatNumber)}</td>
+          <td><span class="tag ${statusTone(shown)}">${Util.esc(statusText(shown))}</span></td>
+          <td style="white-space:nowrap" title="${Util.esc(t('admin.tickets.boughtAt'))} → ${Util.esc(t('admin.tickets.owner'))}">${Util.esc(shortNode(tx.originNode))} → ${Util.esc(shortNode(tx.ownerNode))}</td>
+          <td style="white-space:nowrap">${replicaChips(tx)}</td>
+          <td><a class="btn btn-ghost btn-sm" style="text-decoration:none" href="#/receipt/${encodeURIComponent(tx.id)}">${Util.esc(t('admin.tickets.open'))}</a></td>
+        </tr>`;
+      }).join('') : `<tr><td colspan="9" style="text-align:center;color:var(--slate-500);padding:22px">${Util.esc(t('admin.tickets.empty'))}</td></tr>`;
+      const reachable = lists.filter((r) => r.status === 'fulfilled').length;
+      tk.querySelector('#tk-foot').textContent = t('admin.tickets.footer', { count: rows.length, reachable, total: nodes.length, time: new Date().toLocaleTimeString(window.I18n.lang) });
+    };
+
+    let searchTimer = null;
+    tk.querySelector('#tk-type').onchange = () => drawTickets();
+    tk.querySelector('#tk-q').oninput = () => { clearTimeout(searchTimer); searchTimer = setTimeout(drawTickets, 300); };
+    tk.querySelector('#tk-refresh').onclick = () => drawTickets();
 
     // ---------------- Parametros ----------------
     const cfgEl = root.querySelector('#ad-config');
@@ -229,8 +320,9 @@ window.Views.admin = {
       };
     };
 
-    await Promise.all([drawNodes(), drawConfig(), drawLive(), drawMatrix()]);
+    await Promise.all([drawNodes(), drawTickets(), drawConfig(), drawLive(), drawMatrix()]);
     Util.poll(drawNodes, 3500);
+    Util.poll(drawTickets, 4000);
     Util.poll(drawLive, 3500);
   },
 };

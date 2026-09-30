@@ -31,8 +31,15 @@ function buildFlightsRouter(ctx) {
   });
 
   router.get('/flights/dates', (req, res) => {
-    const { origin, destination } = req.query;
-    res.json({ dates: ctx.flightCache.dates({ origin: origin || undefined, destination: destination || undefined }) });
+    const { origin, destination, status } = req.query;
+    res.json({ dates: ctx.flightCache.dates({ origin: origin || undefined, destination: destination || undefined, status: status || undefined }) });
+  });
+
+  router.get('/flights/status-counts', (req, res) => {
+    const { origin, destination, dateFrom, dateTo } = req.query;
+    res.json({ counts: ctx.flightCache.statusCounts({
+      origin: origin || undefined, destination: destination || undefined, dateFrom: dateFrom || undefined, dateTo: dateTo || undefined,
+    }) });
   });
 
   router.get('/flights/connections', (req, res) => {

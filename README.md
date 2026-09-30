@@ -63,8 +63,11 @@ Abre en el navegador:
 - Nodo Europa/Asia: http://localhost:4002
 - Nodo Sudamérica: http://localhost:4003
 
-Los tres sirven la misma interfaz. El selector **"Conectado a"** en el encabezado
-cambia a cuál nodo le habla tu navegador (simula "desde qué país estás comprando").
+Los tres sirven la misma interfaz. El selector de **país** en el encabezado elige
+el nodo más cercano (Norte y Centroamérica → NA, Sudamérica → SA, Europa, Asia,
+África y Oceanía → EA) y pone el idioma del país (se puede cambiar después). La
+etiqueta junto al selector (ej. `🇧🇷 SA · :4003`) muestra a qué nodo le habla tu
+navegador.
 Ve a **Administración** para simular caídas de base de datos o de red y observar
 la tolerancia a fallos en vivo (ver sección 7).
 
@@ -210,6 +213,10 @@ aircraft_id, status, gate`. El script `scripts/seed.js`:
 
 - Asigna `aircraft_id` → modelo de avión según los rangos de flota del PDF.
 - Aplica la regla *"todo vuelo con fecha futura debe quedar SCHEDULED"*.
+- Solo se venden vuelos SCHEDULED o DELAYED; el estado de todos se ve en
+  **Estado de vuelos**.
+- Un estado que no existe en el CSV (la fila 2163 trae `wh`) se reporta en
+  `invalidStatuses` (si el vuelo es futuro, la regla anterior lo deja SCHEDULED).
 - Detecta (y reporta) aviones que "aparecen" en un aeropuerto distinto al que
   aterrizaron por última vez — ver `aircraftContinuityAnomalies` en el reporte.
   Dado que el dataset es sintético, casi todos los vuelos son eventos

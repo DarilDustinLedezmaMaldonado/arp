@@ -3,6 +3,7 @@
   "_label": "中文",
   "nav": {
     "search": "搜索航班",
+    "flightStatus": "航班状态",
     "wallet": "钱包 / 我的机票",
     "routePlanner": "路线规划",
     "flightDashboard": "航班看板",
@@ -28,7 +29,8 @@
   },
   "header": {
     "brand": "拉斐尔·帕本航空",
-    "nodeBadgeTitle": "您的请求发送到 {{node}}（{{url}}）。本页面加载自 {{origin}}。"
+    "nodeBadgeTitle": "根据您的国家/地区（{{country}}），由 {{node}}（{{url}}）为您服务。本页面加载自 {{origin}}。",
+    "country": "国家/地区"
   },
   "search": {
     "eyebrow": "在线订票 · 三节点网络",
@@ -70,7 +72,9 @@
     "noConnections": "该日期也没有经停 1 次的联程（最长等待 24 小时）。请换一天试试。",
     "anyDateWithStop": "任意日期（需经停）",
     "legsBookedSeparately": "作为一个行程整体购买：所有航段都成功，或全部不成功。",
-    "buyItinerary": "选择座位并购买"
+    "buyItinerary": "选择座位并购买",
+    "onlySellable": "仅显示在售航班（计划中或延误）。",
+    "seeAllStatuses": "查看所有航班"
   },
   "wallet": {
     "addGoogle": "添加到 Google 钱包",
@@ -94,7 +98,8 @@
     "LANDED": "已降落",
     "ARRIVED": "已到达",
     "DELAYED": "延误",
-    "CANCELLED": "已取消"
+    "CANCELLED": "已取消",
+    "UNKNOWN": "未知"
   },
   "booking": {
     "back": "← 返回结果",
@@ -113,7 +118,8 @@
     "conflictWarning": "另一位乘客几乎同时抢占了该座位，节点间冲突解决后您的订单未能确认，请重新选择座位。",
     "successTitle": "一切就绪！",
     "viewReceipt": "查看我的机票",
-    "ownerNode": "该航班所属节点"
+    "ownerNode": "该航班所属节点",
+    "notSellable": "该航班已停止销售（状态：{{status}}）。"
   },
   "seatLegend": {
     "available": "可选",
@@ -237,7 +243,25 @@
     "clockTitle": "本节点时钟",
     "lamport": "Lamport",
     "vector": "向量",
-    "accessKey": "管理密钥"
+    "accessKey": "管理密钥",
+    "tickets": {
+      "title": "最近的机票",
+      "hint": "来自 3 个节点的最新机票。“副本”一列显示每个节点是否已收到该购买：✓ 已确认，⏳ 尚未到达，✗ 节点离线。在一台电脑上购买，然后在这里查看它如何出现在其他电脑上。",
+      "typePurchase": "购买",
+      "typeReserve": "预留",
+      "typeAll": "购买和预留",
+      "search": "乘客、PNR 或航班",
+      "when": "日期",
+      "boughtAt": "发起节点",
+      "owner": "所属节点",
+      "replicas": "副本",
+      "open": "查看",
+      "empty": "还没有机票。",
+      "notYet": "尚未到达",
+      "conflictLost": "冲突失败",
+      "footer": "{{count}} 张机票 · {{reachable}}/{{total}} 个节点响应 · 更新于 {{time}}",
+      "nodes": "节点（发起 → 所属）"
+    }
   },
   "itinerary": {
     "subtitle": "{{count}} 段行程 · 一次购买",
@@ -287,5 +311,25 @@
     "notFound": "在创建该行程的节点上找不到此行程（节点是否宕机？）。",
     "pnr": "订座编号",
     "backToSearch": "返回搜索"
+  },
+  "countryGroups": {
+    "northCentral": "北美洲和中美洲",
+    "south": "南美洲",
+    "europe": "欧洲",
+    "asia": "亚洲和中东",
+    "africa": "非洲",
+    "oceania": "大洋洲"
+  },
+  "statusBoard": {
+    "title": "航班状态",
+    "subtitle": "数据集中的所有航班及其真实状态：计划中、延误、登机中、飞行中、已降落或已取消。",
+    "date": "日期",
+    "all": "全部",
+    "gate": "登机口",
+    "sale": "销售",
+    "onSale": "在售",
+    "closed": "已停售",
+    "count": "{{count}} 个航班",
+    "note": "只有计划中或延误的航班可以购买。点击已停售的航班会打开其面板。"
   }
 }

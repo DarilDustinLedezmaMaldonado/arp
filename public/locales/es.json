@@ -3,6 +3,7 @@
   "_label": "Español",
   "nav": {
     "search": "Buscar vuelos",
+    "flightStatus": "Estado de vuelos",
     "wallet": "Wallet / Mis boletos",
     "routePlanner": "Planificador de rutas",
     "flightDashboard": "Panel del vuelo",
@@ -28,7 +29,8 @@
   },
   "header": {
     "brand": "Aerolíneas Rafael Pabón",
-    "nodeBadgeTitle": "Tus consultas van a {{node}} ({{url}}). Esta página se cargó desde {{origin}}."
+    "nodeBadgeTitle": "Por tu país ({{country}}) te atiende el {{node}} ({{url}}). Esta página se cargó desde {{origin}}.",
+    "country": "País"
   },
   "search": {
     "eyebrow": "Reservas en línea · red de 3 nodos",
@@ -70,7 +72,9 @@
     "noConnections": "Tampoco hay conexiones con 1 escala (máx. 24 h de espera) para esa fecha. Prueba otro día.",
     "anyDateWithStop": "Cualquier fecha (con escala)",
     "legsBookedSeparately": "Se compra como un solo itinerario: todos los tramos o ninguno.",
-    "buyItinerary": "Elegir asientos y comprar"
+    "buyItinerary": "Elegir asientos y comprar",
+    "onlySellable": "Solo se muestran vuelos a la venta (programados o demorados).",
+    "seeAllStatuses": "Ver todos los vuelos"
   },
   "wallet": {
     "addGoogle": "Agregar a Google Wallet",
@@ -94,7 +98,8 @@
     "LANDED": "Aterrizado",
     "ARRIVED": "Llegó",
     "DELAYED": "Demorado",
-    "CANCELLED": "Cancelado"
+    "CANCELLED": "Cancelado",
+    "UNKNOWN": "Desconocido"
   },
   "booking": {
     "back": "← Volver a resultados",
@@ -113,7 +118,8 @@
     "conflictWarning": "Este asiento fue reclamado por otra persona casi al mismo tiempo y, tras resolver el conflicto entre nodos, no se pudo confirmar. Elige otro asiento.",
     "successTitle": "¡Todo listo!",
     "viewReceipt": "Ver mi boleto",
-    "ownerNode": "Nodo dueño de este vuelo"
+    "ownerNode": "Nodo dueño de este vuelo",
+    "notSellable": "Este vuelo ya no está a la venta (estado: {{status}})."
   },
   "seatLegend": {
     "available": "Disponible",
@@ -237,7 +243,25 @@
     "clockTitle": "Reloj de este nodo",
     "lamport": "Lamport",
     "vector": "Vectorial",
-    "accessKey": "Clave de administración"
+    "accessKey": "Clave de administración",
+    "tickets": {
+      "title": "Pasajes recientes",
+      "hint": "Últimos pasajes de los 3 nodos. La columna Réplicas muestra si cada nodo ya recibió la compra: ✓ confirmada, ⏳ todavía no llegó, ✗ nodo sin conexión. Compra desde una PC y mira aquí cómo aparece en las otras.",
+      "typePurchase": "Compras",
+      "typeReserve": "Reservas",
+      "typeAll": "Compras y reservas",
+      "search": "Pasajero, PNR o vuelo",
+      "when": "Fecha",
+      "boughtAt": "Hecho en",
+      "owner": "Dueño",
+      "replicas": "Réplicas",
+      "open": "Ver",
+      "empty": "Todavía no hay pasajes.",
+      "notYet": "todavía no llegó",
+      "conflictLost": "Perdió el conflicto",
+      "footer": "{{count}} pasajes · {{reachable}}/{{total}} nodos respondieron · actualizado {{time}}",
+      "nodes": "Nodos (hecho → dueño)"
+    }
   },
   "itinerary": {
     "subtitle": "Itinerario de {{count}} tramos · una sola compra",
@@ -287,5 +311,25 @@
     "notFound": "No se encontró este itinerario en el nodo que lo creó (¿está caído?).",
     "pnr": "Localizador",
     "backToSearch": "Volver a buscar"
+  },
+  "countryGroups": {
+    "northCentral": "Norte y Centroamérica",
+    "south": "Sudamérica",
+    "europe": "Europa",
+    "asia": "Asia y Medio Oriente",
+    "africa": "África",
+    "oceania": "Oceanía"
+  },
+  "statusBoard": {
+    "title": "Estado de vuelos",
+    "subtitle": "Todos los vuelos del dataset con su estado real: programados, demorados, embarcando, en vuelo, aterrizados o cancelados.",
+    "date": "Fecha",
+    "all": "Todos",
+    "gate": "Puerta",
+    "sale": "Venta",
+    "onSale": "A la venta",
+    "closed": "Cerrada",
+    "count": "{{count}} vuelos",
+    "note": "Solo los vuelos programados o demorados se pueden comprar. Al hacer clic en un vuelo cerrado se abre su panel."
   }
 }

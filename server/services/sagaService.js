@@ -3,6 +3,7 @@
 const { KeyedMutex } = require('./mutex');
 const { layoverMinutes } = require('./flightCache');
 const { newTxId, newPnr } = require('../../shared/idgen');
+const { isSellable } = require('../../shared/flightStatus');
 
 const mutex = new KeyedMutex();
 
@@ -55,6 +56,7 @@ class SagaService {
       const flight = this.ctx.flightCache.get(leg && leg.flightId);
       if (!flight) throw new SagaError(`Vuelo no encontrado: ${leg && leg.flightId}`, 404, 'FLIGHT_NOT_FOUND');
       if (!leg.seatNumber) throw new SagaError(`Falta el asiento del vuelo ${flight.id}.`, 400, 'MISSING_SEAT');
+      if (!isSellable(flight.status)) throw new SagaError(`El vuelo ${flight.id} ya no está a la venta (estado: ${flight.status}).`, 409, 'FLIGHT_NOT_SELLABLE');
       return flight;
     });
     for (let i = 1; i < flights.length; i++) {

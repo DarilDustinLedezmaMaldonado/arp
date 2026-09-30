@@ -249,6 +249,28 @@ input:focus, select:focus, textarea:focus { outline: 2px solid var(--blue-500); 
 .leg-tabs button { font: inherit; font-size: 13.5px; font-weight: 600; padding: 8px 14px; border-radius: var(--radius-sm); border: 1px solid var(--slate-400); background: #fff; color: var(--ink-900); cursor: pointer; display: inline-flex; gap: 8px; align-items: center; }
 .leg-tabs button[aria-selected="true"] { background: var(--navy-950); border-color: var(--navy-950); color: #fff; }
 
+/* ---------- Administracion: pasajes recientes ---------- */
+
+.tickets-head { display: flex; justify-content: space-between; align-items: flex-end; gap: 14px; flex-wrap: wrap; margin-bottom: 12px; }
+.tickets-controls { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; }
+.tickets-table { font-size: 13px; }
+table.data-table.tickets-table td { vertical-align: middle; padding: 8px 6px; }
+table.data-table.tickets-table th { padding: 8px 6px; }
+.rep-chip { display: inline-block; margin-right: 4px; padding: 2px 7px; border-radius: 999px; font-size: 11px; font-weight: 600; white-space: nowrap; }
+.rep-chip.ok { background: var(--green-100); color: var(--green-600); }
+.rep-chip.wait { background: var(--gold-100); color: #8a5a00; }
+.rep-chip.off { background: var(--rose-100); color: var(--rose-600); }
+
+/* ---------- Estado de vuelos ---------- */
+
+.status-filters .field-row { margin-bottom: 4px; }
+.status-chips { display: flex; flex-wrap: wrap; gap: 8px; }
+.status-chip { font: inherit; font-size: 13px; font-weight: 600; padding: 6px 12px; border-radius: 999px; border: 1px solid var(--cloud-200); background: #fff; color: var(--ink-900); cursor: pointer; }
+.status-chip .mono { color: var(--slate-500); font-weight: 500; margin-left: 4px; }
+.status-chip[aria-checked="true"] { background: var(--navy-950); border-color: var(--navy-950); color: #fff; }
+.status-chip[aria-checked="true"] .mono { color: var(--amber-300); }
+.board__row--closed { opacity: 0.72; }
+
 /* ---------- Itinerario con escala (compra combinada / saga) ---------- */
 
 .itin-head { display: flex; align-items: baseline; gap: 14px; flex-wrap: wrap; margin-bottom: 14px; }
@@ -366,6 +388,7 @@ input:focus, select:focus, textarea:focus { outline: 2px solid var(--blue-500); 
 .status-badge.DEPARTED, .status-badge.IN_FLIGHT { background: rgba(31,138,92,0.18); color: #58d69b; }
 .status-badge.LANDED, .status-badge.ARRIVED { background: rgba(255,255,255,0.1); color: #cfd8e8; }
 .status-badge.CANCELLED { background: rgba(194,63,74,0.2); color: #ff9aa2; }
+.status-badge.UNKNOWN { background: rgba(255,255,255,0.06); color: var(--slate-400); border: 1px dashed var(--slate-500); }
 
 /* ---------- Seat map ---------- */
 
@@ -504,7 +527,7 @@ footer.app-footer { text-align: center; color: var(--slate-400); font-size: 12px
   .header-controls { grid-column: 1 / -1; width: 100%; min-width: 0; flex-wrap: wrap; }
   .header-controls .pill-select { min-width: 0; }
   .node-indicator, .node-badge { flex: 0 0 auto; }
-  #node-select { flex: 1 1 140px; width: 0; }
+  #country-select { flex: 1 1 140px; width: 0; }
   #lang-select { flex: 1 1 104px; width: 104px; }
   .main-nav { display: none; grid-column: 1 / -1; width: calc(100% + 28px); margin: 0 -14px -10px; padding: 7px 10px 12px; background: rgba(5,17,38,.72); border-top: 1px solid rgba(255,255,255,.1); }
   .app-header.nav-open .main-nav { display: grid; grid-template-columns: 1fr 1fr; gap: 5px; }

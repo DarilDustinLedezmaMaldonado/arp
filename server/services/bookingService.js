@@ -3,6 +3,7 @@
 const { KeyedMutex, seatKey } = require('./mutex');
 const { authoritativeApply, mirrorConfirmed } = require('./syncCore');
 const { isEffective } = require('../../shared/transactionState');
+const { isSellable } = require('../../shared/flightStatus');
 const { newTxId, newPnr } = require('../../shared/idgen');
 const { generateBaseSeatMap, applyOverlay, aggregateStats } = require('../../shared/seatMap');
 const { sendSyncEvent } = require('../sync/replicationClient');
@@ -64,6 +65,10 @@ class BookingService {
   async _requestSeatActionLocked({ flightId, seatNumber, actionType, passengerName, passengerEmail, refTxId }) {
     const flight = this.ctx.flightCache.get(flightId);
     if (!flight) throw new BookingError('Vuelo no encontrado', 404, 'FLIGHT_NOT_FOUND');
+
+    if ((actionType === 'RESERVE' || actionType === 'PURCHASE') && !isSellable(flight.status)) {
+      throw new BookingError(`El vuelo ${flightId} ya no está a la venta (estado: ${flight.status}).`, 409, 'FLIGHT_NOT_SELLABLE');
+    }
 
     const seat = this.findSeat(flightId, seatNumber);
     if (!seat) throw new BookingError('Asiento no encontrado', 404, 'SEAT_NOT_FOUND');

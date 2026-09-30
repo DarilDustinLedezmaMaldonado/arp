@@ -1,5 +1,7 @@
 'use strict';
 
+const { isSellable } = require('../../shared/flightStatus');
+
 // Reglas de conexion (1 escala): tiempo minimo para cambiar de avion y espera maxima razonable.
 const MIN_LAYOVER_MIN = 60;
 const MAX_LAYOVER_MIN = 24 * 60;
@@ -36,13 +38,26 @@ class FlightCache {
     return this.byId.get(id) || null;
   }
 
+  /** Filtro comun. status acepta uno o varios estados separados por coma ("SCHEDULED,DELAYED"). */
+  filter({ origin, destination, dateFrom, dateTo, status } = {}) {
+    const statuses = status ? String(status).split(',').filter(Boolean) : null;
+    return Array.from(this.byId.values()).filter((f) =>
+      (!origin || f.origin === origin) &&
+      (!destination || f.destination === destination) &&
+      (!dateFrom || f.date >= dateFrom) &&
+      (!dateTo || f.date <= dateTo) &&
+      (!statuses || statuses.includes(f.status)));
+  }
+
+  /** Cuantos vuelos hay en cada estado con los demas filtros aplicados. */
+  statusCounts(filters = {}) {
+    const counts = {};
+    for (const f of this.filter({ ...filters, status: undefined })) counts[f.status] = (counts[f.status] || 0) + 1;
+    return counts;
+  }
+
   search({ origin, destination, dateFrom, dateTo, status, sort = 'DEPARTURE', limit = 50, offset = 0 }) {
-    let rows = Array.from(this.byId.values());
-    if (origin) rows = rows.filter((f) => f.origin === origin);
-    if (destination) rows = rows.filter((f) => f.destination === destination);
-    if (dateFrom) rows = rows.filter((f) => f.date >= dateFrom);
-    if (dateTo) rows = rows.filter((f) => f.date <= dateTo);
-    if (status) rows = rows.filter((f) => f.status === status);
+    let rows = this.filter({ origin, destination, dateFrom, dateTo, status });
     const byDeparture = (a, b) => (a.date + a.time).localeCompare(b.date + b.time);
     if (sort === 'PRICE_ASC') {
       rows.sort((a, b) => (Number(a.priceEconomy) || Infinity) - (Number(b.priceEconomy) || Infinity) || byDeparture(a, b));
@@ -56,11 +71,9 @@ class FlightCache {
   }
 
   /** Dias con vuelos (YYYY-MM-DD) y cuantos hay, opcionalmente para una ruta. */
-  dates({ origin, destination } = {}) {
+  dates({ origin, destination, status } = {}) {
     const counts = new Map();
-    for (const f of this.byId.values()) {
-      if (origin && f.origin !== origin) continue;
-      if (destination && f.destination !== destination) continue;
+    for (const f of this.filter({ origin, destination, status })) {
       counts.set(f.date, (counts.get(f.date) || 0) + 1);
     }
     return Array.from(counts, ([date, count]) => ({ date, count })).sort((a, b) => a.date.localeCompare(b.date));
@@ -79,6 +92,7 @@ class FlightCache {
     const firstLegs = [];
     const secondByHub = new Map();
     for (const f of this.byId.values()) {
+      if (!isSellable(f.status)) continue; // una conexion solo sirve si ambos tramos siguen a la venta
       if (f.origin === origin && f.destination !== destination && (!date || f.date === date) && (!dateFrom || f.date >= dateFrom)) firstLegs.push(f);
       if (f.destination === destination && f.origin !== origin) {
         if (!secondByHub.has(f.origin)) secondByHub.set(f.origin, []);

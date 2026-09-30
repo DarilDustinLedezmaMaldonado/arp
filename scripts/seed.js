@@ -8,6 +8,7 @@ const airports = require('../shared/airports');
 const pricing = require('../shared/pricing');
 const { getModelKeyForAircraftId } = require('../shared/seatMap');
 const { newFlightId } = require('../shared/idgen');
+const { ALL_STATUSES, UNKNOWN_STATUS } = require('../shared/flightStatus');
 const { createAdapter } = require('../server/db/adapterFactory');
 const nodesConfig = require('../config/nodes.json').nodes;
 
@@ -99,6 +100,7 @@ async function main() {
   console.log(`Filas leidas del CSV: ${rawRows.length}`);
 
   let forcedScheduledCount = 0;
+  const invalidStatuses = [];
   let priceEstimatedCount = 0;
   const estimatedPairs = new Set();
 
@@ -107,8 +109,14 @@ async function main() {
     const flightDate = toIsoDate(r.flightDate);
     const flightTime = normalizeTime(r.flightTime);
 
+    // Estado inexistente en el CSV (ej. "wh"): no se inventa uno, queda UNKNOWN y se reporta.
+    let status = r.status.toUpperCase();
+    if (!ALL_STATUSES.includes(status)) {
+      invalidStatuses.push({ csvRow: idx + 2, flightId: id, value: r.status });
+      status = UNKNOWN_STATUS;
+    }
+
     // Regla: todo vuelo con fecha posterior a "hoy" debe quedar SCHEDULED.
-    let status = r.status;
     if (flightDate > SIM_TODAY && status !== 'SCHEDULED') {
       status = 'SCHEDULED';
       forcedScheduledCount++;
@@ -141,6 +149,7 @@ async function main() {
   });
 
   console.log(`Vuelos futuros forzados a SCHEDULED: ${forcedScheduledCount}`);
+  console.log(`Estados invalidos en el CSV (${UNKNOWN_STATUS} salvo que la regla de fecha futura los deje SCHEDULED): ${invalidStatuses.length}`, invalidStatuses);
   console.log(`Vuelos con precio estimado via Dijkstra (sin ruta directa en la matriz): ${priceEstimatedCount} (${estimatedPairs.size} pares distintos)`);
 
   console.log('Verificando continuidad de aeronaves (que no "teletransporten")...');
@@ -161,6 +170,7 @@ async function main() {
         simToday: SIM_TODAY,
         totalFlights: flights.length,
         forcedScheduledCount,
+        invalidStatuses,
         priceEstimatedCount,
         estimatedPairs: Array.from(estimatedPairs),
         aircraftContinuityAnomalies: anomalies.length,

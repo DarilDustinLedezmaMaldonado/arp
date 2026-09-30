@@ -35,6 +35,7 @@ window.Views.search = {
       <div id="tickets-slot"></div>
 
       <div class="leg-tabs" id="leg-tabs" role="tablist" hidden></div>
+      <p class="itin-note" style="margin:0 0 8px">${Util.esc(t('search.onlySellable'))} <a href="#/status">${Util.esc(t('search.seeAllStatuses'))}</a></p>
 
       <div class="results-toolbar">
         <h2 style="font-size:18px" id="results-title"></h2>
@@ -71,17 +72,19 @@ window.Views.search = {
     let showingConnections = false;
     let connLimit = 10;
     const PAGE = 20;
+    // El buscador solo ofrece lo que se puede comprar; el resto se ve en "Estado de vuelos".
+    const ON_SALE = 'SCHEDULED,DELAYED';
 
     const dayLabel = (date) => new Date(`${date}T00:00:00`).toLocaleDateString(window.I18n.lang, { weekday: 'short', day: 'numeric', month: 'short' });
 
     // Solo se ofrecen los dias que realmente tienen vuelos (el dataset cubre dias sueltos, no un calendario continuo).
     const fillDates = async (select, origin, destination, minDate) => {
       const previous = select.value;
-      let { dates } = await ApiClient.get('/api/flights/dates', { origin, destination });
+      let { dates } = await ApiClient.get('/api/flights/dates', { origin, destination, status: ON_SALE });
       let anyLabel = t('search.anyDate');
       if (!dates.length && origin && destination) {
         // Sin vuelo directo: se ofrecen los dias de salida desde el origen, para buscar conexiones con escala.
-        ({ dates } = await ApiClient.get('/api/flights/dates', { origin }));
+        ({ dates } = await ApiClient.get('/api/flights/dates', { origin, status: ON_SALE }));
         anyLabel = t('search.anyDateWithStop');
       }
       const usable = dates.filter((d) => !minDate || d.date >= minDate);
@@ -188,7 +191,7 @@ window.Views.search = {
     const load = async (reset) => {
       if (reset) { offset = 0; connLimit = 10; showingConnections = false; board.innerHTML = headHtml + '<div class="board-empty">' + Util.esc(t('common.loading')) + '</div>'; }
       try {
-        const data = await ApiClient.get('/api/flights', { ...lastParams, sort: sortSelect.value, limit: PAGE, offset });
+        const data = await ApiClient.get('/api/flights', { ...lastParams, status: ON_SALE, sort: sortSelect.value, limit: PAGE, offset });
         total = data.total;
         title.textContent = t('search.resultsCount', { count: Util.number(total) });
         if (reset) board.innerHTML = headHtml;

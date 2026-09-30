@@ -63,6 +63,26 @@ function buildAdminRouter(ctx) {
     res.json(ctx.systemStore.recentEvents(limit));
   });
 
+  // Pasajes recientes para verificar compras y replicacion entre las 3 PC.
+  router.get('/tickets', (req, res) => {
+    const type = ['PURCHASE', 'RESERVE', 'ALL'].includes(req.query.type) ? req.query.type : 'PURCHASE';
+    const limit = Math.min(Number(req.query.limit) || 30, 200);
+    const tickets = ctx.systemStore.recentTickets({ type, q: req.query.q || '', limit }).map((tx) => {
+      const flight = ctx.flightCache.get(tx.flightId);
+      // Estado actual del asiento para este pasaje (check-in, devolucion...) segun la replica local.
+      const latest = ctx.bookingService.latestTxForSeat(tx.flightId, tx.seatNumber);
+      const current = latest && (latest.id === tx.id || latest.basedOnTxId === tx.id) ? latest.status : null;
+      return { ...tx, currentStatus: current,
+        flight: flight && { origin: flight.origin, destination: flight.destination, date: flight.date, time: flight.time } };
+    });
+    res.json({ nodeId: ctx.nodeId, tickets });
+  });
+
+  router.get('/tickets/presence', (req, res) => {
+    const ids = String(req.query.ids || '').split(',').filter(Boolean).slice(0, 200);
+    res.json({ nodeId: ctx.nodeId, presence: ctx.systemStore.replicaStatusByIds(ids) });
+  });
+
   router.get('/outbox', (req, res) => {
     res.json(ctx.systemStore.listAllPendingOutbox());
   });

@@ -3,6 +3,7 @@
 const { KeyedMutex, seatKey } = require('./mutex');
 const { isEffective, acceptsReplica } = require('../../shared/transactionState');
 const { generateBaseSeatMap } = require('../../shared/seatMap');
+const { isSellable } = require('../../shared/flightStatus');
 const nodes = Object.keys(require('../../config/nodes.json').nodes);
 const mutex = new KeyedMutex();
 const lockKey = (ctx, event) => `${ctx.nodeId}:${seatKey(event.flightId, event.seatNumber)}`;
@@ -59,6 +60,8 @@ async function authoritativeApply(ctx, event) {
       : !current || current.id !== event.basedOnTxId || state !== expected[event.actionType];
     if (event.actionType === 'REFUND_COMPLETE' && current &&
         (!current.refundAvailableAt || Date.parse(current.refundAvailableAt) > Date.now())) rejected = true;
+    // El dueno tiene la ultima palabra: un vuelo cancelado, embarcando o ya salido no se vende.
+    const closed = claim && !isSellable(flight.status);
 
     // First accepted decision wins. A later request cannot revoke an issued
     // ticket. Owner clock orders transitions even when origin clocks lag.
@@ -67,13 +70,14 @@ async function authoritativeApply(ctx, event) {
     const tx = { ...event, ...stamp, ownerNode: ctx.nodeId, syncStatus: 'SYNCED',
       cabinClass: base.cabinClass,
       price: base.cabinClass === 'FIRST' ? flight.priceFirst : flight.priceEconomy,
-      status: rejected ? (claim ? 'CONFLICT_LOST' : 'REJECTED') : actionStatus[event.actionType],
-      conflictReason: rejected ? `Estado ${state}: la solicitud ya no corresponde al asiento.` : null,
+      status: closed ? 'REJECTED' : rejected ? (claim ? 'CONFLICT_LOST' : 'REJECTED') : actionStatus[event.actionType],
+      conflictReason: closed ? `Vuelo ${flight.id} en estado ${flight.status}: ya no está a la venta.`
+        : rejected ? `Estado ${state}: la solicitud ya no corresponde al asiento.` : null,
       refundAvailableAt: !rejected && event.actionType === 'REFUND'
         ? new Date(Date.now() + cfg.refundDelaySeconds * 1000).toISOString() : null };
     ctx.systemStore.prepareDecision(tx);
     await persistDecision(ctx, tx);
-    ctx.systemStore.appendEvent({ id: `EVT-${tx.id}`, eventType: rejected ? 'SEAT_REQUEST_REJECTED' : 'SEAT_TX_APPLIED',
+    ctx.systemStore.appendEvent({ id: `EVT-${tx.id}`, eventType: rejected || closed ? 'SEAT_REQUEST_REJECTED' : 'SEAT_TX_APPLIED',
       summary: `${tx.actionType} ${tx.seatNumber} en ${tx.flightId} (${tx.status})`,
       originNode: tx.originNode, lamportTs: tx.lamportTs, vectorClock: tx.vectorClock });
     return resultFor(tx);

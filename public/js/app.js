@@ -1,6 +1,6 @@
 'use strict';
 
-/* global window, document, ApiClient, I18n, Util, Charts */
+/* global window, document, localStorage, ApiClient, I18n, Util, Charts, Countries */
 
 (() => {
   const ROUTES = [
@@ -14,12 +14,14 @@
     { re: /^#\/dashboard\/flight(?:\/([^/]+))?$/, nav: 'flightDashboard', view: 'flightDashboard', params: (m) => ({ flightId: m[1] ? decodeURIComponent(m[1]) : null }) },
     { re: /^#\/dashboard\/global$/, nav: 'globalDashboard', view: 'globalDashboard' },
     { re: /^#\/planner$/, nav: 'routePlanner', view: 'planner' },
+    { re: /^#\/status$/, nav: 'flightStatus', view: 'flightStatus' },
     { re: /^#\/checkin$/, nav: 'checkin', view: 'checkin' },
     { re: /^#\/admin$/, nav: 'admin', view: 'admin' },
   ];
 
   const NAV = [
     { key: 'search', href: '#/' },
+    { key: 'flightStatus', href: '#/status' },
     { key: 'wallet', href: '#/wallet' },
     { key: 'routePlanner', href: '#/planner' },
     { key: 'flightDashboard', href: '#/dashboard/flight' },
@@ -42,11 +44,32 @@
     document.getElementById('brand-text').textContent = window.t('header.brand');
   }
 
+  /** El país decide el nodo (el más cercano) y, al cambiarlo, también el idioma. */
+  async function applyCountry(code, { setLanguage }) {
+    const info = Countries.info(code);
+    Countries.set(code);
+    if (ApiClient.nodeById(info.node)) ApiClient.select(info.node);
+    if (setLanguage && info.lang !== I18n.lang) {
+      await I18n.load(info.lang); // I18n.onChange vuelve a pintar todo
+      return true;
+    }
+    return false;
+  }
+
   function renderSelectors() {
-    const nodeSel = document.getElementById('node-select');
-    nodeSel.innerHTML = ApiClient.nodes().map((n) =>
-      `<option value="${n.id}" ${n.id === ApiClient.selectedId ? 'selected' : ''}>${Util.esc(window.t('common.selectNode'))}: ${Util.esc(n.flag + ' ' + n.label)}</option>`).join('');
-    nodeSel.onchange = () => { ApiClient.select(nodeSel.value); route(); updateFooter(); };
+    const countrySel = document.getElementById('country-select');
+    countrySel.setAttribute('aria-label', window.t('header.country'));
+    countrySel.innerHTML = Countries.groups().map((g) => {
+      const options = Object.keys(g.countries)
+        .map((code) => ({ code, name: Countries.name(code, I18n.lang) }))
+        .sort((a, b) => a.name.localeCompare(b.name, I18n.lang))
+        .map((c) => `<option value="${c.code}" ${c.code === Countries.code ? 'selected' : ''}>${Countries.flag(c.code)} ${Util.esc(c.name)}</option>`).join('');
+      return `<optgroup label="${Util.esc(window.t('countryGroups.' + g.key))}">${options}</optgroup>`;
+    }).join('');
+    countrySel.onchange = async () => {
+      const repainted = await applyCountry(countrySel.value, { setLanguage: true });
+      if (!repainted) { updateFooter(); route(); }
+    };
 
     const langSel = document.getElementById('lang-select');
     langSel.innerHTML = I18n.supported().map((l) => `<option value="${l}" ${l === I18n.lang ? 'selected' : ''}>${I18n.labelFor(l)}</option>`).join('');
@@ -62,7 +85,9 @@
     const url = new URL(n.url);
     badge.textContent = `${n.flag} ${n.id.replace(/^NODE_/, '')} · :${url.port || url.hostname}`;
     badge.classList.toggle('remote', url.origin !== window.location.origin);
-    badge.title = window.t('header.nodeBadgeTitle', { node: n.label, url: n.url, origin: window.location.origin });
+    badge.title = window.t('header.nodeBadgeTitle', {
+      country: Countries.code ? Countries.name(Countries.code, I18n.lang) : '—', node: n.label, url: n.url, origin: window.location.origin,
+    });
   }
 
   async function refreshDots() {
@@ -107,8 +132,13 @@
   }
 
   async function boot() {
+    let hadLanguage = false;
+    try { hadLanguage = Boolean(localStorage.getItem('arp_lang')); } catch { /* sin almacenamiento */ }
     await I18n.init();
     await ApiClient.init();
+    // Primera visita sin idioma elegido: se usa el idioma del país detectado.
+    const { code, firstVisit } = Countries.init(ApiClient.selfId);
+    await applyCountry(code, { setLanguage: firstVisit && !hadLanguage });
     renderSelectors();
     renderNav();
     const toggle = document.getElementById('nav-toggle');

@@ -1,8 +1,15 @@
 {
-  "generatedAt": "2026-09-29T23:58:45.948Z",
+  "generatedAt": "2026-09-30T18:15:31.518Z",
   "simToday": "2026-09-26",
   "totalFlights": 60000,
   "forcedScheduledCount": 32589,
+  "invalidStatuses": [
+    {
+      "csvRow": 2163,
+      "flightId": "F-002162",
+      "value": "wh"
+    }
+  ],
   "priceEstimatedCount": 32880,
   "estimatedPairs": [
     "ATL->SIN",

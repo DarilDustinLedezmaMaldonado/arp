@@ -3,6 +3,7 @@
   "_label": "English",
   "nav": {
     "search": "Search flights",
+    "flightStatus": "Flight status",
     "wallet": "Wallet / My tickets",
     "routePlanner": "Route planner",
     "flightDashboard": "Flight dashboard",
@@ -28,7 +29,8 @@
   },
   "header": {
     "brand": "Rafael Pabón Airlines",
-    "nodeBadgeTitle": "Your requests go to {{node}} ({{url}}). This page was loaded from {{origin}}."
+    "nodeBadgeTitle": "For your country ({{country}}) you are served by {{node}} ({{url}}). This page was loaded from {{origin}}.",
+    "country": "Country"
   },
   "search": {
     "eyebrow": "Online booking · 3-node network",
@@ -70,7 +72,9 @@
     "noConnections": "No 1-stop connections either (max. 24 h wait) on that date. Try another day.",
     "anyDateWithStop": "Any date (with stop)",
     "legsBookedSeparately": "Bought as a single itinerary: all legs or none.",
-    "buyItinerary": "Choose seats and buy"
+    "buyItinerary": "Choose seats and buy",
+    "onlySellable": "Only flights on sale are shown (scheduled or delayed).",
+    "seeAllStatuses": "See all flights"
   },
   "wallet": {
     "addGoogle": "Add to Google Wallet",
@@ -94,7 +98,8 @@
     "LANDED": "Landed",
     "ARRIVED": "Arrived",
     "DELAYED": "Delayed",
-    "CANCELLED": "Cancelled"
+    "CANCELLED": "Cancelled",
+    "UNKNOWN": "Unknown"
   },
   "booking": {
     "back": "← Back to results",
@@ -113,7 +118,8 @@
     "conflictWarning": "Someone else claimed this seat at almost the same time and, after resolving the conflict between nodes, yours could not be confirmed. Please pick another seat.",
     "successTitle": "You're all set!",
     "viewReceipt": "View my ticket",
-    "ownerNode": "Node that owns this flight"
+    "ownerNode": "Node that owns this flight",
+    "notSellable": "This flight is no longer on sale (status: {{status}})."
   },
   "seatLegend": {
     "available": "Available",
@@ -237,7 +243,25 @@
     "clockTitle": "This node's clock",
     "lamport": "Lamport",
     "vector": "Vector",
-    "accessKey": "Administration key"
+    "accessKey": "Administration key",
+    "tickets": {
+      "title": "Recent tickets",
+      "hint": "Latest tickets from all 3 nodes. The Replicas column shows whether each node already received the purchase: ✓ confirmed, ⏳ not there yet, ✗ node offline. Buy from one PC and watch it appear on the others here.",
+      "typePurchase": "Purchases",
+      "typeReserve": "Reservations",
+      "typeAll": "Purchases and reservations",
+      "search": "Passenger, PNR or flight",
+      "when": "Date",
+      "boughtAt": "Made at",
+      "owner": "Owner",
+      "replicas": "Replicas",
+      "open": "View",
+      "empty": "No tickets yet.",
+      "notYet": "not there yet",
+      "conflictLost": "Lost the conflict",
+      "footer": "{{count}} tickets · {{reachable}}/{{total}} nodes answered · updated {{time}}",
+      "nodes": "Nodes (made → owner)"
+    }
   },
   "itinerary": {
     "subtitle": "{{count}}-leg itinerary · one purchase",
@@ -287,5 +311,25 @@
     "notFound": "This itinerary was not found on the node that created it (is it down?).",
     "pnr": "Booking code",
     "backToSearch": "Back to search"
+  },
+  "countryGroups": {
+    "northCentral": "North & Central America",
+    "south": "South America",
+    "europe": "Europe",
+    "asia": "Asia & Middle East",
+    "africa": "Africa",
+    "oceania": "Oceania"
+  },
+  "statusBoard": {
+    "title": "Flight status",
+    "subtitle": "Every flight in the dataset with its real status: scheduled, delayed, boarding, in flight, landed or cancelled.",
+    "date": "Date",
+    "all": "All",
+    "gate": "Gate",
+    "sale": "Sale",
+    "onSale": "On sale",
+    "closed": "Closed",
+    "count": "{{count}} flights",
+    "note": "Only scheduled or delayed flights can be bought. Clicking a closed flight opens its dashboard."
   }
 }

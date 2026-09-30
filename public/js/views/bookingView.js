@@ -27,6 +27,7 @@ window.Views.booking = {
     let seats = data.seats;
     let selectedSeat = null;
     let busy = false;
+    const onSale = ['SCHEDULED', 'DELAYED'].includes(flight.status);
 
     root.innerHTML = `
       <a href="#/" class="btn btn-ghost btn-sm" style="text-decoration:none;margin-bottom:16px">${Util.esc(t('booking.back'))}</a>
@@ -59,14 +60,14 @@ window.Views.booking = {
       const scrollEl = seatSlot.querySelector('.seat-scroll');
       const scrollTop = scrollEl ? scrollEl.scrollTop : 0;
       SeatMap.render(seatSlot, {
-        seats, layout, selected: selectedSeat && selectedSeat.seatNumber, interactive: !busy,
+        seats, layout, selected: selectedSeat && selectedSeat.seatNumber, interactive: !busy && onSale,
         onSelect: (s) => { selectedSeat = s; drawSeats(); drawSide(); },
       });
       const again = seatSlot.querySelector('.seat-scroll');
       if (again) again.scrollTop = scrollTop;
     };
 
-    let notice = '';
+    let notice = onSale ? '' : `<div class="banner banner-warn">${Util.esc(t('booking.notSellable', { status: t('flightStatus.' + flight.status) }))}</div>`;
     const drawSide = () => {
       const s = selectedSeat;
       sidePanel.innerHTML = `
